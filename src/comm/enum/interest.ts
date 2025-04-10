@@ -1,4 +1,4 @@
-export enum Interest {
+export enum Category {
   DEVELOPMENT = '개발',
   ELECTRICAL_ELECTRONIC = '전기/전자',
   MANUFACTURING = '생산/제조',

@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Category } from 'src/comm/enum/interest';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('job')
 export class Job {
@@ -11,8 +12,8 @@ export class Job {
   @Column({ nullable: false })
   company: string;
 
-  @Column({ nullable: false })
-  category: string;
+  @Column({ type: 'enum', enum: Category, nullable: false })
+  category: Category;
 
   @Column({ nullable: false })
   careerLevel: string;

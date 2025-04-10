@@ -1,4 +1,4 @@
-import { Category } from 'src/comm/enum/category';
+import { Type } from 'src/comm/enum/category';
 import { User } from 'src/user/entity/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
@@ -13,8 +13,8 @@ export class Post {
   @Column({ nullable: false })
   content: string;
 
-  @Column({ type: 'enum', enum: Category, nullable: false })
-  type: Category;
+  @Column({ type: 'enum', enum: Type, nullable: false })
+  type: Type;
 
   @ManyToOne(() => User, (user) => user.posts, {
     onDelete: 'CASCADE',
