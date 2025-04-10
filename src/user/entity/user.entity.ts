@@ -1,7 +1,7 @@
-import { Post } from "src/post/entity/post.entity";
-import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import { Post } from 'src/post/entity/post.entity';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
-@Entity("user")
+@Entity('user')
 export class User {
   @PrimaryColumn()
   mail: string;
@@ -14,7 +14,7 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user, {
     cascade: true,
-    orphanedRowAction: "delete",
+    orphanedRowAction: 'delete',
   })
   posts: Post[];
 }
