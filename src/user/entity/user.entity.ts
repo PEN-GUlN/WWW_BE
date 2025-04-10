@@ -10,8 +10,11 @@ export class User {
   password: string;
 
   @Column({ nullable: false })
-  interest: string;
+  interest: string[];
 
-  @OneToMany(() => Post, (post) => post.user, { lazy: true })
+  @OneToMany(() => Post, (post) => post.user, {
+    cascade: true,
+    orphanedRowAction: 'delete',
+  })
   posts: Post[];
 }
