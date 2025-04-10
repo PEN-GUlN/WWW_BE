@@ -1,6 +1,6 @@
 import { Job } from 'src/job/entity/job.entity';
 import { User } from 'src/user/entity/user.entity';
-import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('bookmark')
 export class Bookmark {
@@ -8,8 +8,10 @@ export class Bookmark {
   id: number;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_mail' })
   user: User;
 
   @ManyToOne(() => Job, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'job_id' })
   job: Job;
 }
