@@ -1,4 +1,4 @@
-import { Category } from 'src/comm/enum/interest';
+import { Category } from 'src/comm/enum/category';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('job')

@@ -1,4 +1,4 @@
-import { Type } from 'src/comm/enum/category';
+import { Type } from 'src/comm/enum/type';
 import { User } from 'src/user/entity/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
