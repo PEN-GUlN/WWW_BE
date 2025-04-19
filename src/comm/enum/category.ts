@@ -7,3 +7,13 @@ export enum Category {
   MEDICAL = '의료',
   ETC = '기타',
 }
+
+export const categoryMap: { [key: string]: Category } = {
+  '01': Category.DEVELOPMENT,
+  '02': Category.ELECTRICAL_ELECTRONIC,
+  '03': Category.MANUFACTURING,
+  '04': Category.CONSTRUCTION_CIVIL,
+  '05': Category.OFFICE_SERVICE,
+  '09': Category.MEDICAL,
+  '99': Category.ETC,
+};

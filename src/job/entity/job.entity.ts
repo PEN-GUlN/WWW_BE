@@ -6,36 +6,48 @@ export class Job {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @Column({ nullable: false })
+  @Column()
   title: string;
 
-  @Column({ nullable: false })
+  @Column({ type: 'text' })
+  description: string;
+
+  @Column()
   company: string;
 
-  @Column({ type: 'enum', enum: Category, nullable: false })
+  @Column({ type: 'enum', enum: Category })
   category: Category;
 
-  @Column({ nullable: false })
+  @Column()
+  occupation: string;
+
+  @Column()
   careerLevel: string;
 
-  @Column({ nullable: false })
+  @Column()
   educationLevel: string;
 
-  @Column({ nullable: false })
+  @Column()
   employmentType: string;
 
-  @Column({ nullable: false })
+  @Column()
   workHours: string;
 
-  @Column({ nullable: false })
+  @Column()
   salary: string;
 
-  @Column({ nullable: false })
+  @Column()
   deadline: Date;
 
-  @Column({ nullable: false })
+  @Column()
   postedDate: Date;
 
-  @Column({ nullable: false })
-  logo: string;
+  @Column()
+  linkUrl: string;
+
+  @Column()
+  applyUrl: string;
+
+  @Column()
+  nationImgUrl: string;
 }

@@ -6,11 +6,11 @@ export class User {
   @PrimaryColumn()
   mail: string;
 
-  @Column({ nullable: false })
+  @Column()
   password: string;
 
-  @Column({ nullable: false })
-  interest: string[];
+  @Column()
+  interest: string;
 
   @OneToMany(() => Post, (post) => post.user, {
     cascade: true,
