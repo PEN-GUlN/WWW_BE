@@ -34,7 +34,7 @@ export class JobService {
 
     const response = await axios.get(url, {
       httpsAgent: new https.Agent({
-        rejectUnauthorized: false,
+        rejectUnauthorized: process.env.NODE_ENV === 'dev' ? false : true,
       }),
     });
 
@@ -56,12 +56,11 @@ export class JobService {
       job.description = removeHtmlEntities(item.rctntcSprtQualfCn);
       job.company = item.entNm;
       job.category = categoryMap[dsptcKsco];
-      job.ccupation = item.dsptcKsco;
+      job.occupation = item.dsptcKsco;
       job.careerLevel = item.joDemandCareerStleScd_code;
       job.educationLevel = item.joDemandAcdmcrScd;
       job.employmentType = item.joEmplymStleScd;
       job.workHours = item.wrkHopeHrCn;
-      job.company = item.entNm;
       job.salary = item.anslryDscssAt;
       job.deadline = item.rctntcEndDe;
       job.postedDate = item.rctntcBgnDe;
