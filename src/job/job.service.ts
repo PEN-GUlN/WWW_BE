@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { GetJobsResponse } from './dto/response/get-jobs.response';
 import { XMLParser } from 'fast-xml-parser';
 import axios from 'axios';
-import { categoryMap } from 'src/comm/enum/category';
+import { Category, categoryMap } from 'src/comm/enum/category';
 
 @Injectable()
 export class JobService {
@@ -34,7 +34,7 @@ export class JobService {
 
     const response = await axios.get(url, {
       httpsAgent: new https.Agent({
-        rejectUnauthorized: process.env.NODE_ENV === 'dev' ? false : true,
+        rejectUnauthorized: process.env.NODE_ENV !== 'development',
       }),
     });
 
@@ -55,7 +55,7 @@ export class JobService {
       job.title = item.rctntcSj;
       job.description = removeHtmlEntities(item.rctntcSprtQualfCn);
       job.company = item.entNm;
-      job.category = categoryMap[dsptcKsco];
+      job.category = categoryMap[dsptcKsco] || Category.ETC;
       job.occupation = item.dsptcKsco;
       job.careerLevel = item.joDemandCareerStleScd_code;
       job.educationLevel = item.joDemandAcdmcrScd;

@@ -6,8 +6,10 @@ export class User {
   @PrimaryColumn()
   mail: string;
 
+  @Column()
   password: string;
 
+  @Column()
   interest: string;
 
   @OneToMany(() => Post, (post) => post.user, {
