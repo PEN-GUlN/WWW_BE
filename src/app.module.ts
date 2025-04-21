@@ -4,6 +4,8 @@ import { HttpModule } from '@nestjs/axios';
 import * as https from 'https';
 import { JobModule } from './job/job.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { ConfigModule } from '@nestjs/config';
       }),
     }),
     JobModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
