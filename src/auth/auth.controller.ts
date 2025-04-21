@@ -1,17 +1,8 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpCode,
-  HttpStatus,
-  Request,
-  UseGuards,
-  Session,
-} from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, Session, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupRequest } from './dto/request/signUp.request';
-import { LocalAuthGuard } from './auth.guardt';
 import { LoginRequest } from './dto/request/login.request';
+import { Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -25,12 +16,25 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  async login(@Body() loginDto: LoginRequest, @Session() session: Record<string, any>) {
-    const user = await this.authService.login(loginDto.mail, loginDto.password);
+  async login(
+    @Body() request: LoginRequest,
+    @Session() session: Record<string, any>,
+    @Res() res: Response,
+  ) {
+    {
+      const user = await this.authService.login(request);
 
-    session.user = user;
+      res.cookie('SESSION_ID', session.id, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 3600000,
+      });
 
-    return { message: '로그인 성공', user };
+      return {
+        message: '로그인 성공',
+        user,
+      };
+    }
   }
 
   @Post('logout')
