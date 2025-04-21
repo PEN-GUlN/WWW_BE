@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SignupRequest } from './dto/request/signUp.request';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { LoginRequest } from './dto/request/login.request';
 
 @Injectable()
 export class AuthService {
@@ -35,16 +36,18 @@ export class AuthService {
     return userWithoutPassword;
   }
 
-  async login(mail: string, password: string) {
-    const user = await this.userRepository.findOne({ where: { mail } });
+  async login(request: LoginRequest) {
+    const user = await this.userRepository.findOne({
+      where: { mail: request.mail },
+    });
     if (!user) {
       throw new HttpException('이메일이 존재하지 않습니다.', HttpStatus.UNAUTHORIZED);
     }
-    const isValid = await bcrypt.compare(password, user.password);
+    const isValid = await bcrypt.compare(request.password, user.password);
     if (!isValid) {
       throw new HttpException('비밀번호가 잘못되었습니다.', HttpStatus.UNAUTHORIZED);
     }
-    const { password: _, ...userWithoutPassword } = user;
+    const { password: _, ...userWithoutPassword } = user; //user값중에 password를 제외한 나머지 값들만 가져오도록
     return userWithoutPassword;
   }
 }
