@@ -49,9 +49,9 @@ export class AuthController {
     }
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('logout')
   logout(@Session() session: Record<string, any>) {
     session.destroy(() => {});
-    return { message: '로그아웃 완료' };
   }
 }
