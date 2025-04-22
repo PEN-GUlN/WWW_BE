@@ -31,15 +31,13 @@ export class AuthService {
     });
 
     await this.userRepository.save(newUser);
-
-    const { password, ...userWithoutPassword } = newUser;
-    return userWithoutPassword;
   }
 
   async login(request: LoginRequest) {
     const user = await this.userRepository.findOne({
       where: { mail: request.mail },
     });
+
     if (!user) {
       throw new HttpException('이메일이 존재하지 않습니다.', HttpStatus.UNAUTHORIZED);
     }
@@ -47,7 +45,5 @@ export class AuthService {
     if (!isValid) {
       throw new HttpException('비밀번호가 잘못되었습니다.', HttpStatus.UNAUTHORIZED);
     }
-    const { password: _, ...userWithoutPassword } = user; //user값중에 password를 제외한 나머지 값들만 가져오도록
-    return userWithoutPassword;
   }
 }

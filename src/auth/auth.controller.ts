@@ -8,13 +8,32 @@ import { Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @HttpCode(HttpStatus.CREATED)
-  @Post('signup')
-  async signup(@Body() request: SignupRequest) {
-    return this.authService.signup(request);
+  private setSessionCookie(res: Response, sessionId: string) {
+    res.cookie('SESSION_ID', sessionId, {
+      httpOnly: true,
+      sameSite: 'strict',
+      maxAge: 3600000,
+    });
   }
 
-  @HttpCode(HttpStatus.OK)
+  private sendResponse(res: Response, statusCode: HttpStatus) {
+    res.status(statusCode).end();
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post('signup')
+  async signup(
+    @Body() request: SignupRequest,
+    @Session() session: Record<string, any>,
+    @Res() res: Response,
+  ) {
+    await this.authService.signup(request);
+
+    this.setSessionCookie(res, session.id);
+
+    this.sendResponse(res, HttpStatus.CREATED);
+  }
+
   @Post('login')
   async login(
     @Body() request: LoginRequest,
@@ -22,18 +41,11 @@ export class AuthController {
     @Res() res: Response,
   ) {
     {
-      const user = await this.authService.login(request);
+      await this.authService.login(request);
 
-      res.cookie('SESSION_ID', session.id, {
-        httpOnly: true,
-        sameSite: 'strict',
-        maxAge: 3600000,
-      });
+      this.setSessionCookie(res, session.id);
 
-      return {
-        message: '로그인 성공',
-        user,
-      };
+      this.sendResponse(res, HttpStatus.CREATED);
     }
   }
 
