@@ -4,6 +4,8 @@ import { HttpModule } from '@nestjs/axios';
 import * as https from 'https';
 import { JobModule } from './job/job.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -19,7 +21,7 @@ import { ConfigModule } from '@nestjs/config';
       database: process.env.DB_NAME,
       port: Number(process.env.DB_PORT),
       entities: [__dirname + '/**/*.entity.{ts,js}'],
-      synchronize: true,
+      synchronize: false,
     }),
     HttpModule.register({
       httpsAgent: new https.Agent({
@@ -27,6 +29,8 @@ import { ConfigModule } from '@nestjs/config';
       }),
     }),
     JobModule,
+    AuthModule,
+    UserModule,
   ],
   controllers: [],
   providers: [],
