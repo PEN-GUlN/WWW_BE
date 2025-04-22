@@ -21,7 +21,7 @@ import { UserModule } from './user/user.module';
       database: process.env.DB_NAME,
       port: Number(process.env.DB_PORT),
       entities: [__dirname + '/**/*.entity.{ts,js}'],
-      synchronize: true,
+      synchronize: false,
     }),
     HttpModule.register({
       httpsAgent: new https.Agent({

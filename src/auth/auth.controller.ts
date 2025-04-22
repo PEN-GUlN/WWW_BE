@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpCode, HttpStatus, Session, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignupRequest } from './dto/request/signUp.request';
+import { SignupRequest } from './dto/request/signup.request';
 import { LoginRequest } from './dto/request/login.request';
 import { Response } from 'express';
 
@@ -13,6 +13,7 @@ export class AuthController {
       httpOnly: true,
       sameSite: 'strict',
       maxAge: 3600000,
+      secure: process.env.NODE_ENV === 'production',
     });
   }
 
@@ -31,7 +32,7 @@ export class AuthController {
 
     this.setSessionCookie(res, session.id);
 
-    this.sendResponse(res, HttpStatus.CREATED);
+    this.sendResponse(res, HttpStatus.OK);
   }
 
   @Post('login')
@@ -40,13 +41,11 @@ export class AuthController {
     @Session() session: Record<string, any>,
     @Res() res: Response,
   ) {
-    {
-      await this.authService.login(request);
+    await this.authService.login(request);
 
-      this.setSessionCookie(res, session.id);
+    this.setSessionCookie(res, session.id);
 
-      this.sendResponse(res, HttpStatus.CREATED);
-    }
+    this.sendResponse(res, HttpStatus.OK);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

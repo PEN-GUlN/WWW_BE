@@ -1,47 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { User } from 'src/user/entity/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { SignupRequest } from './dto/request/signUp.request';
+import { SignupRequest } from './dto/request/signup.request';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { LoginRequest } from './dto/request/login.request';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   async signup(request: SignupRequest) {
-    const existingUser = await this.userRepository.findOne({
-      where: { mail: request.mail },
-    });
+    const existingUser = await this.userService.findOneByEmail(request.mail);
+
     if (existingUser) {
       throw new HttpException('이미 존재하는 이메일입니다.', HttpStatus.BAD_REQUEST);
     }
 
     const hashedPassword = await bcrypt.hash(request.password, 10);
 
-    const newUser = this.userRepository.create({
-      mail: request.mail,
+    const newUser = {
+      ...request,
       password: hashedPassword,
-      interest: request.interest,
-    });
-
-    await this.userRepository.save(newUser);
+    };
+    await this.userService.create(newUser);
   }
 
   async login(request: LoginRequest) {
-    const user = await this.userRepository.findOne({
-      where: { mail: request.mail },
-    });
+    const existingUser = await this.userService.findOneByEmail(request.mail);
 
-    if (!user) {
+    if (!existingUser) {
       throw new HttpException('이메일이 존재하지 않습니다.', HttpStatus.UNAUTHORIZED);
     }
-    const isValid = await bcrypt.compare(request.password, user.password);
+
+    const isValid = await bcrypt.compare(request.password, existingUser.password);
+
     if (!isValid) {
       throw new HttpException('비밀번호가 잘못되었습니다.', HttpStatus.UNAUTHORIZED);
     }

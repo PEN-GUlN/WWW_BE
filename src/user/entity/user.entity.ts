@@ -3,7 +3,7 @@ import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 
 @Entity('user')
 export class User {
-  @PrimaryColumn({ unique: true })
+  @PrimaryColumn()
   mail: string;
 
   @Column()
