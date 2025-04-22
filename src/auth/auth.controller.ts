@@ -21,7 +21,6 @@ export class AuthController {
     res.status(statusCode).end();
   }
 
-  @HttpCode(HttpStatus.CREATED)
   @Post('signup')
   async signup(
     @Body() request: SignupRequest,
@@ -32,7 +31,7 @@ export class AuthController {
 
     this.setSessionCookie(res, session.id);
 
-    this.sendResponse(res, HttpStatus.OK);
+    this.sendResponse(res, HttpStatus.CREATED);
   }
 
   @Post('login')
