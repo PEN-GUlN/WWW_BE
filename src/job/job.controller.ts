@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
-import { JobService } from './job.service';
+import { JobService } from './service/job.service';
+import { Category } from 'src/comm/enum/category';
 
 @Controller('job')
 export class JobController {
@@ -10,8 +11,13 @@ export class JobController {
     return await this.jobService.saveData(category);
   }
 
-  @Get('/all')
+  @Get('/query/all')
   async getAllJobs() {
-    return await this.jobService.queryAllJobList();
+    return await this.jobService.getAllJobs();
+  }
+
+  @Get('/query/:category')
+  async getJobsByCategory(@Param('category') category: Category) {
+    return await this.jobService.getJobsByCategory(category);
   }
 }
