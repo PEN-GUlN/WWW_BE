@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entity/post.entity';
 import { Repository } from 'typeorm';
@@ -8,7 +8,7 @@ import { PostRequest } from '../dto/request/post.request';
 @Injectable()
 export class SavePostService {
   constructor(
-    @InjectRepository(Post) private readonly postRepostiory: Repository<Post>,
+    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
@@ -16,7 +16,7 @@ export class SavePostService {
     const user = await this.userRepository.findOneBy({ mail: userMail });
 
     if (!user) {
-      throw new Error('유저를 찾을 수 없습니다.');
+      throw new NotFoundException('유저를 찾을 수 없습니다.');
     }
 
     const newPost = new Post();
@@ -26,6 +26,6 @@ export class SavePostService {
     newPost.type = request.type;
     newPost.user = user;
 
-    await this.postRepostiory.save(newPost);
+    await this.postRepository.save(newPost);
   }
 }

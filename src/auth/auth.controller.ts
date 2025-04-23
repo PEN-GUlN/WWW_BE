@@ -44,11 +44,10 @@ export class AuthController {
   }
 
   @Post('logout')
-  @HttpCode(HttpStatus.NO_CONTENT)
   logout(@Session() session: Record<string, any>, @Res() res: Response) {
     session.destroy(() => {
       res.clearCookie('SESSION_ID');
-      res.sendStatus(HttpStatus.NO_CONTENT);
+      res.status(HttpStatus.NO_CONTENT).end();
     });
   }
 }
