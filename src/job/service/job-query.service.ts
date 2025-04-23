@@ -4,24 +4,16 @@ import { Repository } from 'typeorm';
 import { Category, categoryNameInKorean } from 'src/comm/enum/category';
 import { AllJobsResponse, JobResponse } from '../dto/response/get-jobs.response';
 import { JobDetailResponse } from '../dto/response/get-job-detail.response';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
+@Injectable()
 export class JobQueryService {
   constructor(@InjectRepository(Job) private readonly jobRepository: Repository<Job>) {}
 
   async queryAllJobList(): Promise<AllJobsResponse> {
     const jobs = await this.jobRepository.find();
 
-    const jobList: JobResponse[] = jobs.map((job) => ({
-      id: job.id,
-      company: job.company,
-      title: job.title,
-      description: job.description,
-      workHours: job.workHours,
-      careerLevel: job.careerLevel,
-      employmentType: job.employmentType,
-      salary: job.salary,
-      deadline: this.getDeadlineStatus(job.deadline),
-    }));
+    const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
 
     return { jobs: jobList };
   }
@@ -31,17 +23,7 @@ export class JobQueryService {
       where: { category },
     });
 
-    const jobList: JobResponse[] = jobs.map((job) => ({
-      id: job.id,
-      company: job.company,
-      title: job.title,
-      description: job.description,
-      workHours: job.workHours,
-      careerLevel: job.careerLevel,
-      employmentType: job.employmentType,
-      salary: job.salary,
-      deadline: this.getDeadlineStatus(job.deadline),
-    }));
+    const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
 
     return { jobs: jobList };
   }
@@ -50,7 +32,7 @@ export class JobQueryService {
     const job = await this.jobRepository.findOne({ where: { id } });
 
     if (!job) {
-      throw new Error('Job not found');
+      throw new NotFoundException('채용 공고를 찾을 수 없습니다.');
     }
 
     return {
@@ -84,5 +66,19 @@ export class JobQueryService {
     }
 
     return `D-${diffDays}`;
+  }
+
+  private mapToJobResponse(job: Job): JobResponse {
+    return {
+      id: job.id,
+      company: job.company,
+      title: job.title,
+      description: job.description,
+      workHours: job.workHours,
+      careerLevel: job.careerLevel,
+      employmentType: job.employmentType,
+      salary: job.salary,
+      deadline: this.getDeadlineStatus(job.deadline),
+    };
   }
 }

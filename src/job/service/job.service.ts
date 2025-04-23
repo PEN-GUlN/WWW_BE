@@ -15,7 +15,7 @@ export class JobService {
   }
 
   async getAllJobs() {
-    return this.jobQueryService.queryAllJobList;
+    return this.jobQueryService.queryAllJobList();
   }
 
   async getJobsByCategory(category: Category) {
