@@ -16,11 +16,6 @@ export class AuthController {
       secure: process.env.NODE_ENV === 'production',
     });
   }
-
-  private sendResponse(res: Response, statusCode: HttpStatus) {
-    res.status(statusCode).end();
-  }
-
   @Post('signup')
   async signup(
     @Body() request: SignupRequest,
@@ -28,10 +23,8 @@ export class AuthController {
     @Res() res: Response,
   ) {
     await this.authService.signup(request);
-
     this.setSessionCookie(res, session.id);
-
-    this.sendResponse(res, HttpStatus.CREATED);
+    res.status(HttpStatus.CREATED).end();
   }
 
   @Post('login')
@@ -40,16 +33,21 @@ export class AuthController {
     @Session() session: Record<string, any>,
     @Res() res: Response,
   ) {
-    await this.authService.login(request);
+    const user = await this.authService.login(request);
+
+    session.user = {
+      id: user.mail,
+    };
 
     this.setSessionCookie(res, session.id);
-
-    this.sendResponse(res, HttpStatus.OK);
+    res.status(HttpStatus.OK).end();
   }
 
-  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('logout')
-  logout(@Session() session: Record<string, any>) {
-    session.destroy(() => {});
+  logout(@Session() session: Record<string, any>, @Res() res: Response) {
+    session.destroy(() => {
+      res.clearCookie('SESSION_ID');
+      res.status(HttpStatus.NO_CONTENT).end();
+    });
   }
 }
