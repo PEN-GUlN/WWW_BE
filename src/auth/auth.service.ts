@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { SignupRequest } from './dto/request/signup.request';
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { LoginRequest } from './dto/request/login.request';
 import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/entity/user.entity';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  async signup(request: SignupRequest) {
+  async signup(request: SignupRequest): Promise<void> {
     const existingUser = await this.userService.findOneByEmail(request.mail);
 
     if (existingUser) {
@@ -18,24 +18,25 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(request.password, 10);
 
-    const newUser = {
+    await this.userService.create({
       ...request,
       password: hashedPassword,
-    };
-    await this.userService.create(newUser);
+    });
   }
 
-  async login(request: LoginRequest) {
-    const existingUser = await this.userService.findOneByEmail(request.mail);
+  async login(request: LoginRequest): Promise<User> {
+    const user = await this.userService.findOneByEmail(request.mail);
 
-    if (!existingUser) {
+    if (!user) {
       throw new HttpException('이메일이 존재하지 않습니다.', HttpStatus.UNAUTHORIZED);
     }
 
-    const isValid = await bcrypt.compare(request.password, existingUser.password);
+    const isValid = await bcrypt.compare(request.password, user.password);
 
     if (!isValid) {
       throw new HttpException('비밀번호가 잘못되었습니다.', HttpStatus.UNAUTHORIZED);
     }
+
+    return user;
   }
 }
