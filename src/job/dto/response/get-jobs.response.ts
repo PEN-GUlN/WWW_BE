@@ -1,8 +1,8 @@
-export class GetAllJobsResponse {
-  jobs: GetJobResponse[];
+export class AllJobsResponse {
+  jobs: JobResponse[];
 }
 
-export class GetJobResponse {
+export class JobResponse {
   id: number;
   company: string;
   title: string;

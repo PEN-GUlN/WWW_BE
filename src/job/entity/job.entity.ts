@@ -34,6 +34,9 @@ export class Job {
   salary: string;
 
   @Column()
+  location: string;
+
+  @Column()
   deadline: Date;
 
   @Column()

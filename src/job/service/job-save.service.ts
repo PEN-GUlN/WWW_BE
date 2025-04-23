@@ -3,7 +3,6 @@ import * as https from 'https';
 import { Job } from '../entity/job.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GetAllJobsResponse, GetJobResponse } from '../dto/response/get-jobs.response';
 import { XMLParser } from 'fast-xml-parser';
 import axios from 'axios';
 import { Category, categoryMap } from 'src/comm/enum/category';
@@ -45,6 +44,7 @@ export class JobSaveService {
       job.employmentType = item.joEmplymStleScd;
       job.workHours = item.wrkHopeHrCn;
       job.salary = item.anslryDscssAt;
+      job.location = item.joLplcEntAdres;
       job.deadline = item.rctntcEndDe;
       job.postedDate = item.rctntcBgnDe;
       job.linkUrl = item.linkUrl;
@@ -61,5 +61,3 @@ export class JobSaveService {
     return input.replace(/&[^\s;]+;/g, '');
   }
 }
-
-// job.occupation = dsptcKsco;
