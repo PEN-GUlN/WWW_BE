@@ -7,5 +7,5 @@ export class GetJobsResponse {
   careerLevel: string;
   employmentType: string;
   salary: string;
-  deadline: Date;
+  deadline: string;
 }

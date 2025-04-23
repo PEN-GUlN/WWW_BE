@@ -24,7 +24,7 @@ export class JobService {
       careerLevel: job.careerLevel,
       employmentType: job.employmentType,
       salary: job.salary,
-      deadline: job.deadline,
+      deadline: this.getDeadlineStatus(job.deadline),
     }));
   }
 
@@ -53,11 +53,11 @@ export class JobService {
       const job = new Job();
 
       job.title = item.rctntcSj;
-      job.description = removeHtmlEntities(item.rctntcSprtQualfCn);
+      job.description = this.removeHtmlEntities(item.rctntcSprtQualfCn);
       job.company = item.entNm;
       job.category = categoryMap[dsptcKsco] || Category.ETC;
-      job.occupation = item.dsptcKsco;
-      job.careerLevel = item.joDemandCareerStleScd_code;
+      job.occupation = dsptcKsco;
+      job.careerLevel = item.joDemandCareerStleScd;
       job.educationLevel = item.joDemandAcdmcrScd;
       job.employmentType = item.joEmplymStleScd;
       job.workHours = item.wrkHopeHrCn;
@@ -73,8 +73,21 @@ export class JobService {
 
     await this.jobRepository.save(jobs);
   }
-}
 
-function removeHtmlEntities(input: string): string {
-  return input.replace(/&[^\s;]+;/g, '');
+  private getDeadlineStatus(deadline: Date): string {
+    const today = new Date();
+
+    const diffTime = deadline.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      return '마감';
+    }
+
+    return `D-${diffDays}`;
+  }
+
+  private removeHtmlEntities(input: string): string {
+    return input.replace(/&[^\s;]+;/g, '');
+  }
 }
