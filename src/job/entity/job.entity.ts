@@ -19,9 +19,6 @@ export class Job {
   category: Category;
 
   @Column()
-  occupation: string;
-
-  @Column()
   careerLevel: string;
 
   @Column()
