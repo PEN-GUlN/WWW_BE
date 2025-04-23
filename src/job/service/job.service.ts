@@ -21,4 +21,8 @@ export class JobService {
   async getJobsByCategory(category: Category) {
     return this.jobQueryService.queryJobListByCategory(category);
   }
+
+  async getJobById(id: number) {
+    return this.jobQueryService.queryJobById(id);
+  }
 }

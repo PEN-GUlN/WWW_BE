@@ -20,4 +20,9 @@ export class JobController {
   async getJobsByCategory(@Param('category') category: Category) {
     return await this.jobService.getJobsByCategory(category);
   }
+
+  @Get('/query/detail/:id')
+  async getJobById(@Param('id') id: number) {
+    return await this.jobService.getJobById(id);
+  }
 }
