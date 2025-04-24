@@ -90,7 +90,7 @@ export class QueryPostService {
       type: post.type,
       created_at: post.created_at,
       user: {
-        mail: String(post.user),
+        mail: post.user.mail,
       },
     };
   }
