@@ -1,28 +1,43 @@
 import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
-import { AppModule } from './app.module';
+import { RedisStore } from 'connect-redis';
+import Redis from 'ioredis';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+  const redisClient = new Redis({
+    host: 'localhost',
+    port: 6379,
+    db: 0,
+  });
 
   app.use(
     session({
-      secret: process.env.SESSION_SECRET,
+      store: new RedisStore({ client: redisClient }),
+      secret: process.env.SESSION_SECRET || 'sesesesesion_secret',
       resave: false,
       saveUninitialized: false,
-      cookie: { maxAge: 1000 * 60 * 60 },
+      cookie: {
+        maxAge: 1000 * 60 * 60,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+      },
     }),
+
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    ),
   );
 
-  process.env.PORT || 8880;
+  const port = process.env.PORT || 8880;
+  await app.listen(port);
+  console.log(`🚀 Server running on http://localhost:${port}`);
 }
 bootstrap();
