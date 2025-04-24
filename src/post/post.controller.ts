@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Post, Session, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Session,
+  UseGuards,
+} from '@nestjs/common';
 import { PostService } from './service/post.service';
 import { PostRequest } from './dto/request/post.request';
 import { SessionAuthGuard } from 'src/auth/session-auth.guard';
@@ -8,6 +18,7 @@ import { Type } from 'src/comm/enum/type';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
+  @HttpCode(HttpStatus.CREATED)
   @Post('/save')
   @UseGuards(SessionAuthGuard)
   async savePost(@Body() request: PostRequest, @Session() session: Record<string, any>) {

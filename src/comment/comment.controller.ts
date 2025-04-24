@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   HttpCode,
+  HttpStatus,
   Param,
   Post,
   Session,
@@ -16,7 +17,7 @@ import { SessionAuthGuard } from 'src/auth/session-auth.guard';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   @Post('/save')
   @UseGuards(SessionAuthGuard)
   async saveComment(@Body() request: CommentRequest, @Session() session: Record<string, any>) {
