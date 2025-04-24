@@ -9,4 +9,8 @@ export class CommentService {
   async saveComment(request: CommentRequest, userMail: string) {
     return this.commCommentService.saveComment(request, userMail);
   }
+
+  async deleteComment(id: number, userMail: string) {
+    return this.commCommentService.deleteComment(id, userMail);
+  }
 }

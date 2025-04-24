@@ -33,4 +33,26 @@ export class CommCommentService {
 
     await this.commentRepository.save(newComment);
   }
+
+  async deleteComment(id: number, userMail: string) {
+    const user = await this.userRepository.findOneBy({ mail: userMail });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const comment = await this.commentRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
+
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+    if (comment.user.mail !== user.mail) {
+      throw new NotFoundException('Not Your Comment');
+    }
+
+    await this.commentRepository.delete(id);
+  }
 }
