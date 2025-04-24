@@ -16,6 +16,11 @@ export class AuthController {
   ) {
     await this.authService.signup(request);
 
+    session.user = {
+      id: request.mail,
+    };
+    session.save();
+
     res.status(HttpStatus.CREATED).end();
   }
 

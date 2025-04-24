@@ -46,18 +46,15 @@ export class QueryPostService {
   async queryPostById(id: number): Promise<PostDetailResponse> {
     const post = await this.postRepository.findOne({
       where: { id },
-      relations: ['user'],
+      relations: ['user', 'comments', 'comments.user'],
+      order: { id: 'DESC' },
     });
 
     if (!post) {
       throw new NotFoundException('게시글을 찾을 수 없습니다.');
     }
 
-    const comments = await this.commentRepository.find({
-      where: { post },
-      relations: ['user'],
-      order: { id: 'DESC' },
-    });
+    const comments = post.comments;
 
     const postDetailResponse: PostDetailResponse = {
       id: post.id,

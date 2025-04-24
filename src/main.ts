@@ -3,16 +3,15 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import { RedisStore } from 'connect-redis';
-import connectRedis from 'connect-redis';
 import Redis from 'ioredis';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const redisClient = new Redis({
-    host: 'localhost',
-    port: 6379,
-    db: 0,
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT || '6379'),
+    db: parseInt(process.env.REDIS_DB || '0'),
   });
 
   app.use(

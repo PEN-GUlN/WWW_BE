@@ -17,16 +17,19 @@ export class PostController {
   }
 
   @Get('/query/all')
+  @UseGuards(SessionAuthGuard)
   async getAllPosts() {
     return await this.postService.getAllPosts();
   }
 
   @Get('/query/:type')
+  @UseGuards(SessionAuthGuard)
   async getPostsByType(@Param('type') type: Type) {
     return await this.postService.getPostsByType(type);
   }
 
   @Get('/query/detail/:id')
+  @UseGuards(SessionAuthGuard)
   async getPostById(@Param('id') id: number) {
     return await this.postService.getPostById(id);
   }
