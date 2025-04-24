@@ -8,14 +8,6 @@ import { Response } from 'express';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  private setSessionCookie(res: Response, sessionId: string) {
-    res.cookie('SESSION_ID', sessionId, {
-      httpOnly: true,
-      sameSite: 'strict',
-      maxAge: 3600000,
-      secure: process.env.NODE_ENV === 'production',
-    });
-  }
   @Post('signup')
   async signup(
     @Body() request: SignupRequest,
@@ -23,7 +15,12 @@ export class AuthController {
     @Res() res: Response,
   ) {
     await this.authService.signup(request);
-    this.setSessionCookie(res, session.id);
+
+    session.user = {
+      id: request.mail,
+    };
+    session.save();
+
     res.status(HttpStatus.CREATED).end();
   }
 
@@ -38,8 +35,8 @@ export class AuthController {
     session.user = {
       id: user.mail,
     };
+    session.save();
 
-    this.setSessionCookie(res, session.id);
     res.status(HttpStatus.OK).end();
   }
 

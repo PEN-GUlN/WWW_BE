@@ -11,8 +11,11 @@ export class JobQueryService {
   constructor(@InjectRepository(Job) private readonly jobRepository: Repository<Job>) {}
 
   async queryAllJobList(): Promise<AllJobsResponse> {
-    const jobs = await this.jobRepository.find();
-
+    const jobs = await this.jobRepository.find({
+      order: {
+        id: 'DESC',
+      },
+    });
     const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
 
     return { jobs: jobList };
@@ -21,6 +24,9 @@ export class JobQueryService {
   async queryJobListByCategory(category: Category): Promise<AllJobsResponse> {
     const jobs = await this.jobRepository.find({
       where: { category },
+      order: {
+        id: 'DESC',
+      },
     });
 
     const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));

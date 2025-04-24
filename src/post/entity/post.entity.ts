@@ -1,6 +1,14 @@
 import { Type } from 'src/comm/enum/type';
+import { Comment } from 'src/comment/entity/comment.entity';
 import { User } from 'src/user/entity/user.entity';
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('post')
 export class Post {
@@ -23,4 +31,7 @@ export class Post {
     onDelete: 'CASCADE',
   })
   user: User;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 }
