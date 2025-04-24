@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from './entity/post.entity';
 import { User } from 'src/user/entity/user.entity';
 import { PostService } from './service/post.service';
+import { QueryPostService } from './service/query-post.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User])],
 
   controllers: [PostController],
-  providers: [PostService, SavePostService],
+  providers: [PostService, SavePostService, QueryPostService],
 })
 export class PostModule {}

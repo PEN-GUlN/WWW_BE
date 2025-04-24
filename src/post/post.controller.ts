@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Session, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Session, UseGuards } from '@nestjs/common';
 import { PostService } from './service/post.service';
 import { PostRequest } from './dto/request/post.request';
 import { SessionAuthGuard } from 'src/auth/session-auth.guard';
@@ -13,5 +13,10 @@ export class PostController {
     const userMail = session.user.mail;
 
     await this.postService.savePost(request, userMail);
+  }
+
+  @Get('/query/all')
+  async getAllPosts() {
+    return await this.postService.getAllPosts();
   }
 }
