@@ -12,5 +12,6 @@ import { JobSaveService } from './service/job-save.service';
 
   controllers: [JobController],
   providers: [JobService, JobQueryService, JobSaveService],
+  exports: [JobQueryService],
 })
 export class JobModule {}

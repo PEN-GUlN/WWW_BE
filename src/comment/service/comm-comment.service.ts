@@ -3,30 +3,24 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CommentRequest } from '../dto/request/comment.request';
 import { Comment } from '../entity/comment.entity';
-import { User } from 'src/user/entity/user.entity';
-import { Post } from 'src/post/entity/post.entity';
+import { UserService } from 'src/user/user.service';
+import { QueryPostService } from 'src/post/service/query-post.service';
 
 @Injectable()
 export class CommCommentService {
   constructor(
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
+    private readonly userService: UserService,
+    private readonly queryPostService: QueryPostService,
   ) {}
 
   async saveComment(request: CommentRequest, userMail: string) {
-    const user = await this.userRepository.findOneBy({ mail: userMail });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    const post = await this.postRepository.findOneBy({ id: request.postId });
-    if (!post) {
-      throw new NotFoundException('Post not found');
-    }
+    const user = await this.userService.findUserByMailOrThrow(userMail);
+    const post = await this.queryPostService.findPostByIdOrThrow(request.postId);
+
     const newComment = new Comment();
+
     newComment.content = request.content;
     newComment.post = post;
     newComment.user = user;
@@ -35,11 +29,7 @@ export class CommCommentService {
   }
 
   async deleteComment(id: number, userMail: string) {
-    const user = await this.userRepository.findOneBy({ mail: userMail });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.userService.findUserByMailOrThrow(userMail);
 
     const comment = await this.commentRepository.findOne({
       where: { id },
@@ -49,6 +39,7 @@ export class CommCommentService {
     if (!comment) {
       throw new ForbiddenException('Comment not found');
     }
+
     if (comment.user.mail !== user.mail) {
       throw new NotFoundException('Not Your Comment');
     }
