@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CommCommentService } from './comm-comment.service';
 import { CommentRequest } from '../dto/request/comment.request';
+import { CommandCommentService } from './command-comment.service';
 
 @Injectable()
 export class CommentService {
-  constructor(private readonly commCommentService: CommCommentService) {}
+  constructor(private readonly commandCommentService: CommandCommentService) {}
 
   async saveComment(request: CommentRequest, userMail: string) {
-    return this.commCommentService.saveComment(request, userMail);
+    return this.commandCommentService.saveComment(request, userMail);
   }
 
   async deleteComment(id: number, userMail: string) {
-    return this.commCommentService.deleteComment(id, userMail);
+    return this.commandCommentService.deleteComment(id, userMail);
   }
 }

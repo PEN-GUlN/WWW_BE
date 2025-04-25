@@ -7,7 +7,7 @@ import { JobDetailResponse } from '../dto/response/get-job-detail.response';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
-export class JobQueryService {
+export class QueryJobService {
   constructor(@InjectRepository(Job) private readonly jobRepository: Repository<Job>) {}
 
   async queryAllJobList(): Promise<AllJobsResponse> {

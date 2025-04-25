@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CommandBookmarkService } from './commend-bookmark.service';
 import { QueryBookmarkService } from './query-bookmark.service';
+import { CommandBookmarkService } from './command-bookmark.service';
 
 @Injectable()
 export class BookmarkService {

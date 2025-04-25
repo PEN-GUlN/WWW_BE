@@ -5,7 +5,7 @@ import { Bookmark } from '../entity/bookmark.entity';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { BookmarkListResponse, BookmarkResponse } from '../dto/response/bookmark-list.response';
-import { JobQueryService } from 'src/job/service/job-query.service';
+import { QueryJobService } from 'src/job/service/query-job.service';
 
 @Injectable()
 export class QueryBookmarkService {
@@ -13,7 +13,7 @@ export class QueryBookmarkService {
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
     private readonly userService: UserService,
-    private readonly queryJobService: JobQueryService,
+    private readonly queryJobService: QueryJobService,
   ) {}
 
   async queryBookmarksByUser(userMail: string): Promise<BookmarkListResponse> {

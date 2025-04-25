@@ -8,7 +8,7 @@ import axios from 'axios';
 import { Category, categoryMap } from 'src/comm/enum/category';
 
 @Injectable()
-export class JobSaveService {
+export class CommandJobService {
   constructor(@InjectRepository(Job) private readonly jobRepository: Repository<Job>) {}
 
   async saveData(category: string) {

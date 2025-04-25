@@ -7,7 +7,7 @@ import { UserService } from 'src/user/user.service';
 import { QueryPostService } from 'src/post/service/query-post.service';
 
 @Injectable()
-export class CommCommentService {
+export class CommandCommentService {
   constructor(
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,

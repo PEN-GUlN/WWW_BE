@@ -4,7 +4,7 @@ import { Bookmark } from '../entity/bookmark.entity';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { QueryBookmarkService } from './query-bookmark.service';
-import { JobQueryService } from 'src/job/service/job-query.service';
+import { QueryJobService } from 'src/job/service/query-job.service';
 
 @Injectable()
 export class CommandBookmarkService {
@@ -13,11 +13,11 @@ export class CommandBookmarkService {
     private readonly bookmarkRepository: Repository<Bookmark>,
     private readonly userService: UserService,
     private readonly queryBookmarkService: QueryBookmarkService,
-    private readonly jobQueryService: JobQueryService,
+    private readonly queryJobService: QueryJobService,
   ) {}
 
   async saveBookmark(jobId: number, userMail: string) {
-    const job = await this.jobQueryService.findJobByIdOrThrow(jobId);
+    const job = await this.queryJobService.findJobByIdOrThrow(jobId);
     const user = await this.userService.findUserByMailOrThrow(userMail);
 
     this.queryBookmarkService.validateExistBookmark(user.mail, jobId);
