@@ -7,7 +7,7 @@ import { JobDetailResponse } from '../dto/response/get-job-detail.response';
 import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
-export class JobQueryService {
+export class QueryJobService {
   constructor(@InjectRepository(Job) private readonly jobRepository: Repository<Job>) {}
 
   async queryAllJobList(): Promise<AllJobsResponse> {
@@ -35,11 +35,7 @@ export class JobQueryService {
   }
 
   async queryJobById(id: number): Promise<JobDetailResponse> {
-    const job = await this.jobRepository.findOne({ where: { id } });
-
-    if (!job) {
-      throw new NotFoundException('채용 공고를 찾을 수 없습니다.');
-    }
+    const job = await this.findJobByIdOrThrow(id);
 
     return {
       id: job.id,
@@ -74,7 +70,7 @@ export class JobQueryService {
     return `D-${diffDays}`;
   }
 
-  private mapToJobResponse(job: Job): JobResponse {
+  mapToJobResponse(job: Job): JobResponse {
     return {
       id: job.id,
       company: job.company,
@@ -86,5 +82,14 @@ export class JobQueryService {
       salary: job.salary,
       deadline: this.getDeadlineStatus(job.deadline),
     };
+  }
+  async findJobByIdOrThrow(id: number): Promise<Job> {
+    const job = await this.jobRepository.findOne({
+      where: { id },
+    });
+    if (!job) {
+      throw new NotFoundException('Job not found');
+    }
+    return job;
   }
 }

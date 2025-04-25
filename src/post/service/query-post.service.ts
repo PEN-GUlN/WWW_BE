@@ -4,7 +4,6 @@ import { Post } from '../entity/post.entity';
 import { Repository } from 'typeorm';
 import { PostListResponse, PostResponse } from '../dto/response/post-list.response';
 import { Type } from 'src/comm/enum/type';
-import { Comment } from 'src/comment/entity/comment.entity';
 import { PostDetailResponse } from '../dto/response/post-detail.response';
 
 @Injectable()
@@ -12,8 +11,6 @@ export class QueryPostService {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
-    @InjectRepository(Comment)
-    private readonly commentRepository: Repository<Comment>,
   ) {}
 
   async queryAllPosts(): Promise<PostListResponse> {
@@ -44,15 +41,7 @@ export class QueryPostService {
   }
 
   async queryPostById(id: number): Promise<PostDetailResponse> {
-    const post = await this.postRepository.findOne({
-      where: { id },
-      relations: ['user', 'comments', 'comments.user'],
-      order: { id: 'DESC' },
-    });
-
-    if (!post) {
-      throw new NotFoundException('게시글을 찾을 수 없습니다.');
-    }
+    const post = await this.findPostByIdOrThrow(id);
 
     const comments = post.comments;
 
@@ -90,5 +79,16 @@ export class QueryPostService {
         mail: post.user.mail,
       },
     };
+  }
+
+  async findPostByIdOrThrow(id: number): Promise<Post> {
+    const post = await this.postRepository.findOne({
+      where: { id },
+      relations: ['user', 'comments', 'comments.user'],
+    });
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+    return post;
   }
 }

@@ -10,7 +10,7 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async signup(request: SignupRequest): Promise<void> {
-    const existingUser = await this.userService.findOneByEmail(request.mail);
+    const existingUser = await this.userService.existOneByMail(request.mail);
 
     if (existingUser) {
       throw new HttpException('이미 존재하는 이메일입니다.', HttpStatus.BAD_REQUEST);
@@ -25,11 +25,7 @@ export class AuthService {
   }
 
   async login(request: LoginRequest): Promise<User> {
-    const user = await this.userService.findOneByEmail(request.mail);
-
-    if (!user) {
-      throw new HttpException('이메일이 존재하지 않습니다.', HttpStatus.UNAUTHORIZED);
-    }
+    const user = await this.userService.findUserByMailOrThrow(request.mail);
 
     const isValid = await bcrypt.compare(request.password, user.password);
 
