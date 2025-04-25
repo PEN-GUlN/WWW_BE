@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CommentRequest } from '../dto/request/comment.request';
@@ -47,7 +47,7 @@ export class CommCommentService {
     });
 
     if (!comment) {
-      throw new NotFoundException('Comment not found');
+      throw new ForbiddenException('Comment not found');
     }
     if (comment.user.mail !== user.mail) {
       throw new NotFoundException('Not Your Comment');

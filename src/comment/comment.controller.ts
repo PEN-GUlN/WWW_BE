@@ -23,7 +23,7 @@ export class CommentController {
   async saveComment(@Body() request: CommentRequest, @Session() session: Record<string, any>) {
     const userMail = session.user.mail;
 
-    return await this.commentService.saveComment(request, userMail);
+    await this.commentService.saveComment(request, userMail);
   }
 
   @HttpCode(204)
@@ -32,6 +32,6 @@ export class CommentController {
   async deleteComment(@Param('id') id: number, @Session() session: Record<string, any>) {
     const userMail = session.user.mail;
 
-    return await this.commentService.deleteComment(id, userMail);
+    await this.commentService.deleteComment(id, userMail);
   }
 }

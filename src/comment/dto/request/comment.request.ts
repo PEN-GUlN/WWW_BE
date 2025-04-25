@@ -1,6 +1,7 @@
-import { IsNumber, IsString, Length } from 'class-validator';
+import { IsNumber, IsPositive, IsString, Length } from 'class-validator';
 
 export class CommentRequest {
+  @IsPositive()
   @IsNumber()
   postId: number;
 
