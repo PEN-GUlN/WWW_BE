@@ -37,11 +37,11 @@ export class CommCommentService {
     });
 
     if (!comment) {
-      throw new ForbiddenException('Comment not found');
+      throw new NotFoundException('Comment not found');
     }
 
     if (comment.user.mail !== user.mail) {
-      throw new NotFoundException('Not Your Comment');
+      throw new ForbiddenException('Not Your Comment');
     }
 
     await this.commentRepository.delete(id);

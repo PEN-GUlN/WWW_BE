@@ -7,7 +7,7 @@ import { QueryBookmarkService } from './query-bookmark.service';
 import { JobQueryService } from 'src/job/service/job-query.service';
 
 @Injectable()
-export class CommendBookmarkService {
+export class CommandBookmarkService {
   constructor(
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
