@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { JobService } from './service/job.service';
 import { Category } from 'src/comm/enum/category';
 
@@ -6,6 +6,7 @@ import { Category } from 'src/comm/enum/category';
 export class JobController {
   constructor(private readonly jobService: JobService) {}
 
+  @HttpCode(201)
   @Post('/save/:category')
   async saveData(@Param('category') category: string) {
     return await this.jobService.saveData(category);
