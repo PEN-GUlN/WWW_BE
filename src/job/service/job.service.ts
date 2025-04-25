@@ -7,7 +7,7 @@ import { QueryJobService } from './query-job.service';
 export class JobService {
   constructor(
     private readonly commandJobService: CommandJobService,
-    private readonly queryJobServie: QueryJobService,
+    private readonly queryJobService: QueryJobService,
   ) {}
 
   async saveData(category: string) {
@@ -15,14 +15,14 @@ export class JobService {
   }
 
   async getAllJobs() {
-    return this.queryJobServie.queryAllJobList();
+    return this.queryJobService.queryAllJobList();
   }
 
   async getJobsByCategory(category: Category) {
-    return this.queryJobServie.queryJobListByCategory(category);
+    return this.queryJobService.queryJobListByCategory(category);
   }
 
   async getJobById(id: number) {
-    return this.queryJobServie.queryJobById(id);
+    return this.queryJobService.queryJobById(id);
   }
 }
