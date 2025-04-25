@@ -2,7 +2,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entity/user.entity';
 import { Repository } from 'typeorm';
 import { Bookmark } from '../entity/bookmark.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { BookmarkListResponse, BookmarkResponse } from '../dto/response/bookmark-list.response';
 import { JobQueryService } from 'src/job/service/job-query.service';
@@ -49,5 +49,14 @@ export class QueryBookmarkService {
     }
 
     return bookmark;
+  }
+
+  async validateExistBookmark(mail: string, jobId: number): Promise<void> {
+    const exists = await this.bookmarkRepository.exist({
+      where: { user: { mail: mail }, job: { id: jobId } },
+    });
+    if (exists) {
+      throw new ConflictException('Already bookmarked');
+    }
   }
 }

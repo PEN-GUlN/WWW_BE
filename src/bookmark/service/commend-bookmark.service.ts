@@ -20,6 +20,8 @@ export class CommendBookmarkService {
     const job = await this.jobQueryService.findJobByIdOrThrow(jobId);
     const user = await this.userService.findUserByMailOrThrow(userMail);
 
+    this.queryBookmarkService.validateExistBookmark(user.mail, jobId);
+
     const bookmark = new Bookmark();
     bookmark.user = user;
     bookmark.job = job;

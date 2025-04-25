@@ -18,6 +18,6 @@ export class BookmarkService {
   }
 
   async queryMyBookmarks(userMail: string) {
-    await this.queryBookmarkService.queryBookmarksByUser(userMail);
+    return await this.queryBookmarkService.queryBookmarksByUser(userMail);
   }
 }

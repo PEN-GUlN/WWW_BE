@@ -32,15 +32,14 @@ export class BookmarkController {
     @Session() session: Record<string, any>,
   ) {
     const userMail = session.user.mail;
-    await this.bookmarkService.deleteBookmark(bookmarkId, userMail);
+    return await this.bookmarkService.deleteBookmark(bookmarkId, userMail);
   }
 
   @Get('/my')
   @UseGuards(SessionAuthGuard)
   async getMyBookmrks(@Session() session: Record<string, any>) {
-    console.log(session);
     const userMail = session.user.mail;
 
-    await this.getMyBookmrks(userMail);
+    return await this.bookmarkService.queryMyBookmarks(userMail);
   }
 }
