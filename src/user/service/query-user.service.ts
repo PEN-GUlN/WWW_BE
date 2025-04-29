@@ -13,7 +13,7 @@ export class QueryUserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly postServie: PostService,
+    private readonly postService: PostService,
   ) {}
 
   async queryMyPage(userMail: string): Promise<MyPageResponse> {
@@ -42,7 +42,7 @@ export class QueryUserService {
   }
 
   async queryPostsByUser(userMail: string): Promise<PostListResponse> {
-    const posts = await this.postServie.getPostsByUserMail(userMail);
+    const posts = await this.postService.getPostsByUserMail(userMail);
 
     const postsResponse: PostResponse[] = posts.map((post) => ({
       id: post.id,

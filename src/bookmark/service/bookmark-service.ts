@@ -17,10 +17,6 @@ export class BookmarkService {
     await this.commandBookmarkService.deleteBookmark(bookmarkId, userMail);
   }
 
-  async queryMyBookmarks(userMail: string) {
-    return await this.queryBookmarkService.queryBookmarksByUser(userMail);
-  }
-
   async findBookmarksByUser(userMail: string) {
     return await this.queryBookmarkService.queryBookmarksByUser(userMail);
   }

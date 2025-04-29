@@ -11,14 +11,14 @@ export class CommandBookmarkService {
   constructor(
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
-    private readonly userServic: UserService,
+    private readonly userService: UserService,
     private readonly jobService: JobService,
     private readonly bookmarkService: BookmarkService,
   ) {}
 
   async saveBookmark(jobId: number, userMail: string) {
     const job = await this.jobService.findJobByIdOrThrow(jobId);
-    const user = await this.userServic.findUserByMailOrThrow(userMail);
+    const user = await this.userService.findUserByMailOrThrow(userMail);
 
     this.bookmarkService.validateExistBookmark(user.mail, jobId);
 
@@ -30,7 +30,7 @@ export class CommandBookmarkService {
   }
 
   async deleteBookmark(bookmarkId: number, userMail: string) {
-    const user = await this.userServic.findUserByMailOrThrow(userMail);
+    const user = await this.userService.findUserByMailOrThrow(userMail);
     const bookmark = await this.bookmarkService.findBookmarkByIdOrThrow(bookmarkId);
 
     if (user.mail != bookmark.user.mail) {

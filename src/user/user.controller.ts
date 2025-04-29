@@ -10,6 +10,6 @@ export class UserController {
   @UseGuards(SessionAuthGuard)
   async mypage(@Session() session: Record<string, any>) {
     const userMail = session.user.mail;
-    await this.userService.getMyPage(userMail);
+    return await this.userService.getMyPage(userMail);
   }
 }
