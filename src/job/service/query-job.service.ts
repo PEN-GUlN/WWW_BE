@@ -35,7 +35,7 @@ export class QueryJobService {
   }
 
   async queryJobById(id: number): Promise<JobDetailResponse> {
-    const job = await this.findJobByIdOrThrow(id);
+    const job = await this.queryJobByIdOrThrow(id);
 
     return {
       id: job.id,
@@ -83,7 +83,8 @@ export class QueryJobService {
       deadline: this.getDeadlineStatus(job.deadline),
     };
   }
-  async findJobByIdOrThrow(id: number): Promise<Job> {
+
+  async queryJobByIdOrThrow(id: number): Promise<Job> {
     const job = await this.jobRepository.findOne({
       where: { id },
     });

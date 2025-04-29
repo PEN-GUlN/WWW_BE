@@ -40,6 +40,6 @@ export class BookmarkController {
   async getMyBookmrks(@Session() session: Record<string, any>) {
     const userMail = session.user.mail;
 
-    return await this.bookmarkService.queryMyBookmarks(userMail);
+    return await this.bookmarkService.findBookmarksByUser(userMail);
   }
 }

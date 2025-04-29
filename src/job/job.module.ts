@@ -12,6 +12,6 @@ import { CommandJobService } from './service/command-job.service';
 
   controllers: [JobController],
   providers: [JobService, QueryJobService, CommandJobService],
-  exports: [QueryJobService],
+  exports: [JobService],
 })
 export class JobModule {}

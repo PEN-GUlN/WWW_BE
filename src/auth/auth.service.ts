@@ -2,7 +2,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { SignupRequest } from './dto/request/signup.request';
 import { LoginRequest } from './dto/request/login.request';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/user/service/user.service';
 import { User } from 'src/user/entity/user.entity';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async signup(request: SignupRequest): Promise<void> {
-    const existingUser = await this.userService.existOneByMail(request.mail);
+    const existingUser = await this.userService.existByMail(request.mail);
 
     if (existingUser) {
       throw new HttpException('이미 존재하는 이메일입니다.', HttpStatus.BAD_REQUEST);

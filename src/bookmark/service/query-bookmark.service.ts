@@ -3,9 +3,9 @@ import { User } from 'src/user/entity/user.entity';
 import { Repository } from 'typeorm';
 import { Bookmark } from '../entity/bookmark.entity';
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
 import { BookmarkListResponse, BookmarkResponse } from '../dto/response/bookmark-list.response';
-import { QueryJobService } from 'src/job/service/query-job.service';
+import { UserService } from 'src/user/service/user.service';
+import { JobService } from 'src/job/service/job.service';
 
 @Injectable()
 export class QueryBookmarkService {
@@ -13,7 +13,7 @@ export class QueryBookmarkService {
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
     private readonly userService: UserService,
-    private readonly queryJobService: QueryJobService,
+    private readonly jobService: JobService,
   ) {}
 
   async queryBookmarksByUser(userMail: string): Promise<BookmarkListResponse> {
@@ -34,11 +34,11 @@ export class QueryBookmarkService {
   private mapToBookmarkResponse(bookmark: Bookmark): BookmarkResponse {
     const response = new BookmarkResponse();
     response.id = bookmark.id;
-    response.jobInfo = this.queryJobService.mapToJobResponse(bookmark.job);
+    response.jobInfo = this.jobService.mapToJobResponse(bookmark.job);
     return response;
   }
 
-  async findBookmarkByIdOrThrow(bookmarkId: number): Promise<Bookmark> {
+  async queryBookmarkByIdOrThrow(bookmarkId: number): Promise<Bookmark> {
     const bookmark = await this.bookmarkRepository.findOne({
       where: { id: bookmarkId },
       relations: ['user', 'job'],
@@ -51,9 +51,9 @@ export class QueryBookmarkService {
     return bookmark;
   }
 
-  async validateExistBookmark(mail: string, jobId: number): Promise<void> {
-    const exists = await this.bookmarkRepository.exist({
-      where: { user: { mail: mail }, job: { id: jobId } },
+  async validateExistBookmark(userMail: string, jobId: number): Promise<void> {
+    const exists = await this.bookmarkRepository.exists({
+      where: { user: { mail: userMail }, job: { id: jobId } },
     });
     if (exists) {
       throw new ConflictException('Already bookmarked');

@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CommentRequest } from '../dto/request/comment.request';
 import { Comment } from '../entity/comment.entity';
-import { UserService } from 'src/user/user.service';
-import { QueryPostService } from 'src/post/service/query-post.service';
+import { PostService } from 'src/post/service/post.service';
+import { UserService } from 'src/user/service/user.service';
 
 @Injectable()
 export class CommandCommentService {
@@ -12,12 +12,12 @@ export class CommandCommentService {
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
     private readonly userService: UserService,
-    private readonly queryPostService: QueryPostService,
+    private readonly postService: PostService,
   ) {}
 
   async saveComment(request: CommentRequest, userMail: string) {
     const user = await this.userService.findUserByMailOrThrow(userMail);
-    const post = await this.queryPostService.findPostByIdOrThrow(request.postId);
+    const post = await this.postService.getPostByIdOrThrow(request.postId);
 
     const newComment = new Comment();
 

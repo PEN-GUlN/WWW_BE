@@ -2,9 +2,9 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bookmark } from '../entity/bookmark.entity';
 import { Repository } from 'typeorm';
-import { UserService } from 'src/user/user.service';
-import { QueryBookmarkService } from './query-bookmark.service';
-import { QueryJobService } from 'src/job/service/query-job.service';
+import { UserService } from 'src/user/service/user.service';
+import { JobService } from 'src/job/service/job.service';
+import { BookmarkService } from './bookmark-service';
 
 @Injectable()
 export class CommandBookmarkService {
@@ -12,15 +12,15 @@ export class CommandBookmarkService {
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
     private readonly userService: UserService,
-    private readonly queryBookmarkService: QueryBookmarkService,
-    private readonly queryJobService: QueryJobService,
+    private readonly jobService: JobService,
+    private readonly bookmarkService: BookmarkService,
   ) {}
 
   async saveBookmark(jobId: number, userMail: string) {
-    const job = await this.queryJobService.findJobByIdOrThrow(jobId);
+    const job = await this.jobService.findJobByIdOrThrow(jobId);
     const user = await this.userService.findUserByMailOrThrow(userMail);
 
-    this.queryBookmarkService.validateExistBookmark(user.mail, jobId);
+    this.bookmarkService.validateExistBookmark(user.mail, jobId);
 
     const bookmark = new Bookmark();
     bookmark.user = user;
@@ -31,7 +31,7 @@ export class CommandBookmarkService {
 
   async deleteBookmark(bookmarkId: number, userMail: string) {
     const user = await this.userService.findUserByMailOrThrow(userMail);
-    const bookmark = await this.queryBookmarkService.findBookmarkByIdOrThrow(bookmarkId);
+    const bookmark = await this.bookmarkService.findBookmarkByIdOrThrow(bookmarkId);
 
     if (user.mail != bookmark.user.mail) {
       throw new UnauthorizedException('Not your bookmark');

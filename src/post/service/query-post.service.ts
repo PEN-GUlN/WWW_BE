@@ -41,7 +41,7 @@ export class QueryPostService {
   }
 
   async queryPostById(id: number): Promise<PostDetailResponse> {
-    const post = await this.findPostByIdOrThrow(id);
+    const post = await this.queryPostByIdOrThrow(id);
 
     const comments = post.comments;
 
@@ -68,6 +68,13 @@ export class QueryPostService {
     return postDetailResponse;
   }
 
+  async queryPostsByUserMail(userMail: string) {
+    return this.postRepository.find({
+      where: { user: { mail: userMail } },
+      relations: ['user'],
+    });
+  }
+
   private mapToJobResponse(post: Post): PostResponse {
     return {
       id: post.id,
@@ -81,7 +88,7 @@ export class QueryPostService {
     };
   }
 
-  async findPostByIdOrThrow(id: number): Promise<Post> {
+  async queryPostByIdOrThrow(id: number): Promise<Post> {
     const post = await this.postRepository.findOne({
       where: { id },
       relations: ['user', 'comments', 'comments.user'],
