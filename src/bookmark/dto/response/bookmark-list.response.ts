@@ -8,4 +8,5 @@ export class BookmarkListResponse {
 export class BookmarkResponse {
   id: number;
   jobInfo: JobResponse;
+  response: Promise<JobResponse>;
 }

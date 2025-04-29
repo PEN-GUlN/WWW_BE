@@ -20,4 +20,16 @@ export class BookmarkService {
   async queryMyBookmarks(userMail: string) {
     return await this.queryBookmarkService.queryBookmarksByUser(userMail);
   }
+
+  async findBookmarksByUser(userMail: string) {
+    return await this.queryBookmarkService.queryBookmarksByUser(userMail);
+  }
+
+  async findBookmarkByIdOrThrow(bookmarkId: number) {
+    return await this.queryBookmarkService.queryBookmarkByIdOrThrow(bookmarkId);
+  }
+
+  async validateExistBookmark(userMail: string, jobId: number) {
+    return await this.queryBookmarkService.validateExistBookmark(userMail, jobId);
+  }
 }

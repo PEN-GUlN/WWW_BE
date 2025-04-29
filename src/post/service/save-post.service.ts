@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entity/post.entity';
 import { Repository } from 'typeorm';
 import { PostRequest } from '../dto/request/post.request';
-import { UserService } from 'src/user/user.service';
+import { UserService } from 'src/user/service/user.service';
 
 @Injectable()
 export class SavePostService {

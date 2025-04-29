@@ -26,4 +26,12 @@ export class PostService {
   async getPostById(id: number) {
     return this.queryPostService.queryPostById(id);
   }
+
+  async getPostByIdOrThrow(id: number) {
+    return this.queryPostService.queryPostByIdOrThrow(id);
+  }
+
+  async getPostsByUserMail(userMail: string) {
+    return this.queryPostService.queryPostsByUserMail(userMail);
+  }
 }
