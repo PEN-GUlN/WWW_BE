@@ -81,6 +81,8 @@ export class QueryJobService {
       employmentType: job.employmentType,
       salary: job.salary,
       deadline: this.getDeadlineStatus(job.deadline),
+      location: job.location,
+      nationImgUrl: job.nationImgUrl,
     };
   }
 

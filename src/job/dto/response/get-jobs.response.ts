@@ -12,4 +12,6 @@ export class JobResponse {
   employmentType: string;
   salary: string;
   deadline: string;
+  location: string;
+  nationImgUrl: string;
 }

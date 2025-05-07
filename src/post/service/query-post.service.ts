@@ -72,6 +72,7 @@ export class QueryPostService {
     return this.postRepository.find({
       where: { user: { mail: userMail } },
       relations: ['user'],
+      order: { id: 'DESC' },
     });
   }
 
