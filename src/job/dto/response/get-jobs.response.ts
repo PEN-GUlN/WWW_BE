@@ -1,5 +1,6 @@
 export class AllJobsResponse {
   jobs: JobResponse[];
+  jobCnt: number;
 }
 
 export class JobResponse {
