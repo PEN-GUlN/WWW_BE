@@ -1,5 +1,6 @@
 export class AllJobsResponse {
   jobs: JobResponse[];
+  jobCnt: number;
 }
 
 export class JobResponse {
@@ -12,4 +13,6 @@ export class JobResponse {
   employmentType: string;
   salary: string;
   deadline: string;
+  location: string;
+  nationImgUrl: string;
 }

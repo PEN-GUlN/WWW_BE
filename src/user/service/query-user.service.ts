@@ -1,9 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { User } from '../entity/user.entity';
-import { Post } from 'src/post/entity/post.entity';
 import { PostListResponse, PostResponse } from 'src/post/dto/response/post-list.response';
 import { MyPageResponse } from '../dto/my-page-response';
 import { PostService } from 'src/post/service/post.service';
@@ -13,6 +12,7 @@ export class QueryUserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
   ) {}
 
