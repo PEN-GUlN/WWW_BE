@@ -15,8 +15,8 @@ export class CommandCommentService {
     private readonly postService: PostService,
   ) {}
 
-  async saveComment(request: CommentRequest, userMail: string) {
-    const user = await this.userService.findUserByMailOrThrow(userMail);
+  async saveComment(request: CommentRequest, userEmail: string) {
+    const user = await this.userService.findUserByEmailOrThrow(userEmail);
     const post = await this.postService.getPostByIdOrThrow(request.postId);
 
     const newComment = new Comment();
@@ -28,8 +28,8 @@ export class CommandCommentService {
     await this.commentRepository.save(newComment);
   }
 
-  async deleteComment(id: number, userMail: string) {
-    const user = await this.userService.findUserByMailOrThrow(userMail);
+  async deleteComment(id: number, userEmail: string) {
+    const user = await this.userService.findUserByEmailOrThrow(userEmail);
 
     const comment = await this.commentRepository.findOne({
       where: { id },
@@ -40,7 +40,7 @@ export class CommandCommentService {
       throw new NotFoundException('Comment not found');
     }
 
-    if (comment.user.mail !== user.mail) {
+    if (comment.user.email !== user.email) {
       throw new ForbiddenException('Not Your Comment');
     }
 

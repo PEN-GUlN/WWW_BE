@@ -13,14 +13,15 @@ export class SavePostService {
     private readonly userService: UserService,
   ) {}
 
-  async savePost(request: PostRequest, userMail: string) {
-    const user = await this.userService.findUserByMailOrThrow(userMail);
+  async savePost(request: PostRequest, userEmail: string) {
+    const user = await this.userService.findUserByEmailOrThrow(userEmail);
 
     const newPost = new Post();
 
     newPost.title = request.title;
     newPost.content = request.content;
     newPost.type = request.type;
+    newPost.tags = request.tags.join(', ');
     newPost.user = user;
 
     await this.postRepository.save(newPost);

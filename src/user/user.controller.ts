@@ -9,7 +9,7 @@ export class UserController {
   @Get('/mypage')
   @UseGuards(SessionAuthGuard)
   async mypage(@Session() session: Record<string, any>) {
-    const userMail = session.user.mail;
-    return await this.userService.getMyPage(userMail);
+    const userEmail = session.user.email;
+    return await this.userService.getMyPage(userEmail);
   }
 }

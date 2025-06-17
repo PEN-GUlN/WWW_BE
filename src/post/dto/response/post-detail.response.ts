@@ -7,8 +7,9 @@ export class PostDetailResponse {
   content: string;
   created_at: Date;
   type: Type;
+  tags: string[];
   user: {
-    mail: string;
+    email: string;
   };
   comments: CommentResponse[];
   commentCnt: number;

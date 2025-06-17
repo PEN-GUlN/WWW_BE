@@ -14,7 +14,7 @@ export class AuthController {
     await this.authService.signup(request);
 
     session.user = {
-      id: request.mail,
+      id: request.email,
     };
     session.save();
   }
@@ -24,8 +24,10 @@ export class AuthController {
     const user = await this.authService.login(request);
 
     session.user = {
-      id: user.mail,
+      id: user.email,
     };
+    console.log('session', session);
+
     session.save();
   }
 

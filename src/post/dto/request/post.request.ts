@@ -12,4 +12,7 @@ export class PostRequest {
 
   @IsEnum(Type)
   type: Type;
+
+  @IsString({ each: true })
+  tags: string[];
 }

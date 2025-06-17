@@ -16,8 +16,8 @@ export class QueryBookmarkService {
     private readonly jobService: JobService,
   ) {}
 
-  async queryBookmarksByUser(userMail: string): Promise<BookmarkListResponse> {
-    const user = await this.userService.findUserByMailOrThrow(userMail);
+  async queryBookmarksByUser(userEmail: string): Promise<BookmarkListResponse> {
+    const user = await this.userService.findUserByEmailOrThrow(userEmail);
 
     const bookmarks = await this.bookmarkRepository.find({
       where: { user },
@@ -51,9 +51,9 @@ export class QueryBookmarkService {
     return bookmark;
   }
 
-  async validateExistBookmark(userMail: string, jobId: number): Promise<void> {
+  async validateExistBookmark(userEmail: string, jobId: number): Promise<void> {
     const exists = await this.bookmarkRepository.exists({
-      where: { user: { mail: userMail }, job: { id: jobId } },
+      where: { user: { email: userEmail }, job: { id: jobId } },
     });
     if (exists) {
       throw new ConflictException('Already bookmarked');

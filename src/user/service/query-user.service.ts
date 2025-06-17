@@ -16,23 +16,23 @@ export class QueryUserService {
     private readonly postService: PostService,
   ) {}
 
-  async queryMyPage(userMail: string): Promise<MyPageResponse> {
-    const user = await this.queryUserByMailOrThrow(userMail);
+  async queryMyPage(userEmail: string): Promise<MyPageResponse> {
+    const user = await this.queryUserByEmailOrThrow(userEmail);
 
-    const postsData = await this.queryPostsByUser(user.mail);
+    const postsData = await this.queryPostsByUser(user.email);
 
     const myPageResponse = new MyPageResponse();
 
-    myPageResponse.mail = user.mail;
+    myPageResponse.email = user.email;
     myPageResponse.interest = user.interest;
     myPageResponse.posts = postsData;
 
     return myPageResponse;
   }
 
-  async queryUserByMailOrThrow(mail: string): Promise<User> {
+  async queryUserByEmailOrThrow(email: string): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: { mail },
+      where: { email },
       relations: ['posts'],
     });
     if (!user) {
@@ -41,17 +41,18 @@ export class QueryUserService {
     return user;
   }
 
-  async queryPostsByUser(userMail: string): Promise<PostListResponse> {
-    const posts = await this.postService.getPostsByUserMail(userMail);
+  async queryPostsByUser(userEmail: string): Promise<PostListResponse> {
+    const posts = await this.postService.getPostsByUserEmail(userEmail);
 
     const postsResponse: PostResponse[] = posts.map((post) => ({
       id: post.id,
       title: post.title,
       content: post.content,
       type: post.type,
+      tags: post.tags.split(', ').map((tag) => tag.trim()),
       created_at: post.created_at,
       user: {
-        mail: post.user.mail,
+        email: post.user.email,
       },
     }));
 
@@ -61,8 +62,8 @@ export class QueryUserService {
     };
   }
 
-  async existByMail(mail: string): Promise<boolean> {
-    const user = await this.userRepository.findOneBy({ mail });
+  async existByEmail(email: string): Promise<boolean> {
+    const user = await this.userRepository.findOneBy({ email });
     return !!user;
   }
 }

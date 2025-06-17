@@ -10,10 +10,10 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async signup(request: SignupRequest): Promise<void> {
-    const existingUser = await this.userService.existByMail(request.mail);
+    const existingUser = await this.userService.existByEmail(request.email);
 
     if (existingUser) {
-      throw new HttpException('이미 존재하는 이메일입니다.', HttpStatus.BAD_REQUEST);
+      throw new HttpException('이미 존재하는 이메일입니다.', HttpStatus.CONFLICT);
     }
 
     const hashedPassword = await bcrypt.hash(request.password, 10);
@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   async login(request: LoginRequest): Promise<User> {
-    const user = await this.userService.findUserByMailOrThrow(request.mail);
+    const user = await this.userService.findUserByEmailOrThrow(request.email);
 
     const isValid = await bcrypt.compare(request.password, user.password);
 

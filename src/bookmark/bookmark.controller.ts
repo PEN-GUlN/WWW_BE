@@ -20,8 +20,8 @@ export class BookmarkController {
   @Post('/save/:jobId')
   @UseGuards(SessionAuthGuard)
   async saveBookmark(@Param('jobId') jobId: number, @Session() session: Record<string, any>) {
-    const userMail = session.user.mail;
-    await this.bookmarkService.saveBookmark(jobId, userMail);
+    const userEmail = session.user.email;
+    await this.bookmarkService.saveBookmark(jobId, userEmail);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -31,15 +31,15 @@ export class BookmarkController {
     @Param('bookmarkId') bookmarkId: number,
     @Session() session: Record<string, any>,
   ) {
-    const userMail = session.user.mail;
-    return await this.bookmarkService.deleteBookmark(bookmarkId, userMail);
+    const userEmail = session.user.email;
+    return await this.bookmarkService.deleteBookmark(bookmarkId, userEmail);
   }
 
   @Get('/my')
   @UseGuards(SessionAuthGuard)
-  async getMyBookmrks(@Session() session: Record<string, any>) {
-    const userMail = session.user.mail;
+  async getMyBookmarks(@Session() session: Record<string, any>) {
+    const userEmail = session.user.email;
 
-    return await this.bookmarkService.findBookmarksByUser(userMail);
+    return await this.bookmarkService.findBookmarksByUser(userEmail);
   }
 }

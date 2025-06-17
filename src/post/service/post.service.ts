@@ -11,8 +11,8 @@ export class PostService {
     private readonly queryPostService: QueryPostService,
   ) {}
 
-  async savePost(request: PostRequest, userMail: string) {
-    return this.savePostService.savePost(request, userMail);
+  async savePost(request: PostRequest, userEmail: string) {
+    return this.savePostService.savePost(request, userEmail);
   }
 
   async getAllPosts() {
@@ -31,7 +31,7 @@ export class PostService {
     return this.queryPostService.queryPostByIdOrThrow(id);
   }
 
-  async getPostsByUserMail(userMail: string) {
-    return this.queryPostService.queryPostsByUserMail(userMail);
+  async getPostsByUserEmail(userEmail: string) {
+    return this.queryPostService.queryPostsByUserEmail(userEmail);
   }
 }

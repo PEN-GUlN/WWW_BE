@@ -16,11 +16,11 @@ export class CommandBookmarkService {
     private readonly queryBookmarkService: QueryBookmarkService,
   ) {}
 
-  async saveBookmark(jobId: number, userMail: string) {
+  async saveBookmark(jobId: number, userEmail: string) {
     const job = await this.jobService.findJobByIdOrThrow(jobId);
-    const user = await this.userService.findUserByMailOrThrow(userMail);
+    const user = await this.userService.findUserByEmailOrThrow(userEmail);
 
-    this.queryBookmarkService.validateExistBookmark(user.mail, jobId);
+    this.queryBookmarkService.validateExistBookmark(user.email, jobId);
 
     const bookmark = new Bookmark();
     bookmark.user = user;
@@ -29,11 +29,11 @@ export class CommandBookmarkService {
     await this.bookmarkRepository.save(bookmark);
   }
 
-  async deleteBookmark(bookmarkId: number, userMail: string) {
-    const user = await this.userService.findUserByMailOrThrow(userMail);
+  async deleteBookmark(bookmarkId: number, userEmail: string) {
+    const user = await this.userService.findUserByEmailOrThrow(userEmail);
     const bookmark = await this.queryBookmarkService.queryBookmarkByIdOrThrow(bookmarkId);
 
-    if (user.mail != bookmark.user.mail) {
+    if (user.email != bookmark.user.email) {
       throw new UnauthorizedException('Not your bookmark');
     }
 

@@ -3,6 +3,6 @@ export class CommentResponse {
   content: string;
   created_at: Date;
   user: {
-    mail: string;
+    email: string;
   };
 }

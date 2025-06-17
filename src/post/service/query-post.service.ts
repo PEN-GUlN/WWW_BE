@@ -51,15 +51,16 @@ export class QueryPostService {
       content: post.content,
       type: post.type,
       created_at: post.created_at,
+      tags: post.tags.split(', ').map((tag) => tag.trim()),
       user: {
-        mail: post.user.mail,
+        email: post.user.email,
       },
       comments: comments.map((comment) => ({
         id: comment.id,
         content: comment.content,
         created_at: comment.created_at,
         user: {
-          mail: comment.user.mail,
+          email: comment.user.email,
         },
       })),
       commentCnt: comments.length,
@@ -68,9 +69,9 @@ export class QueryPostService {
     return postDetailResponse;
   }
 
-  async queryPostsByUserMail(userMail: string) {
+  async queryPostsByUserEmail(userEmail: string) {
     return this.postRepository.find({
-      where: { user: { mail: userMail } },
+      where: { user: { email: userEmail } },
       relations: ['user'],
       order: { id: 'DESC' },
     });
@@ -83,8 +84,9 @@ export class QueryPostService {
       content: post.content,
       type: post.type,
       created_at: post.created_at,
+      tags: post.tags.split(', ').map((tag) => tag.trim()),
       user: {
-        mail: post.user.mail,
+        email: post.user.email,
       },
     };
   }

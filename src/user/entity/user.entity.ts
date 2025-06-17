@@ -4,7 +4,7 @@ import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 @Entity('user')
 export class User {
   @PrimaryColumn()
-  mail: string;
+  email: string;
 
   @Column()
   password: string;

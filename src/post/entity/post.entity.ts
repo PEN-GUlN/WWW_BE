@@ -27,6 +27,9 @@ export class Post {
   @CreateDateColumn()
   created_at: Date;
 
+  @Column()
+  tags: string;
+
   @ManyToOne(() => User, (user) => user.posts, {
     onDelete: 'CASCADE',
   })

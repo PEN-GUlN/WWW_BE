@@ -30,8 +30,8 @@ export class CommentController {
   @Delete('/delete/:id')
   @UseGuards(SessionAuthGuard)
   async deleteComment(@Param('id') id: number, @Session() session: Record<string, any>) {
-    const userMail = session.user.mail;
+    const userEmail = session.user.email;
 
-    await this.commentService.deleteComment(id, userMail);
+    await this.commentService.deleteComment(id, userEmail);
   }
 }

@@ -15,15 +15,15 @@ export class UserService {
     return await this.commandUserService.saveUser(request);
   }
 
-  async getMyPage(userMail: string): Promise<MyPageResponse> {
-    return await this.queryUserService.queryMyPage(userMail);
+  async getMyPage(userEmail: string): Promise<MyPageResponse> {
+    return await this.queryUserService.queryMyPage(userEmail);
   }
 
-  async findUserByMailOrThrow(userMail: string) {
-    return await this.queryUserService.queryUserByMailOrThrow(userMail);
+  async findUserByEmailOrThrow(userEmail: string) {
+    return await this.queryUserService.queryUserByEmailOrThrow(userEmail);
   }
 
-  async existByMail(userMail: string) {
-    return await this.queryUserService.existByMail(userMail);
+  async existByEmail(userEmail: string) {
+    return await this.queryUserService.existByEmail(userEmail);
   }
 }
