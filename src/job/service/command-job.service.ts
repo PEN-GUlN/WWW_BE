@@ -44,7 +44,7 @@ export class CommandJobService {
       job.employmentType = item.joEmplymStleScd;
       job.workHours = item.wrkHopeHrCn;
       job.salary = item.anslryDscssAt;
-      job.location = item.joLplcEntAdres;
+      job.location = this.removeHtmlEntities(item.joLplcEntAdres);
       job.deadline = item.rctntcEndDe;
       job.postedDate = item.rctntcBgnDe;
       job.linkUrl = item.linkUrl;

@@ -17,8 +17,9 @@ export class QueryJobService {
       },
     });
     const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
+    const jobCnt = jobs.length;
 
-    return { jobs: jobList };
+    return { jobs: jobList, jobCnt: jobCnt };
   }
 
   async queryJobListByCategory(category: Category): Promise<AllJobsResponse> {
@@ -30,8 +31,9 @@ export class QueryJobService {
     });
 
     const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
+    const jobCnt = jobs.length;
 
-    return { jobs: jobList };
+    return { jobs: jobList, jobCnt: jobs.length };
   }
 
   async queryJobById(id: number): Promise<JobDetailResponse> {
@@ -81,6 +83,8 @@ export class QueryJobService {
       employmentType: job.employmentType,
       salary: job.salary,
       deadline: this.getDeadlineStatus(job.deadline),
+      location: job.location,
+      nationImgUrl: job.nationImgUrl,
     };
   }
 
