@@ -21,9 +21,9 @@ export class CommentController {
   @Post('/save')
   @UseGuards(SessionAuthGuard)
   async saveComment(@Body() request: CommentRequest, @Session() session: Record<string, any>) {
-    const userMail = session.user.mail;
+    const userEmail = session.user.email;
 
-    await this.commentService.saveComment(request, userMail);
+    await this.commentService.saveComment(request, userEmail);
   }
 
   @HttpCode(204)

@@ -27,7 +27,7 @@ export class CommandUserService {
 
     interests.forEach((interest) => {
       // interest가 categoryMap에 있는지 확인하고, 맞다면 mappedCategories에 추가
-      for (const [key, value] of Object.entries(categoryMap)) {
+      for (const [, value] of Object.entries(categoryMap)) {
         if (categoryNameInKorean[value] === interest) {
           mappedCategories.push(value);
           break;

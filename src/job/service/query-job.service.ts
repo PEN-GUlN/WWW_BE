@@ -33,7 +33,7 @@ export class QueryJobService {
     const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
     const jobCnt = jobs.length;
 
-    return { jobs: jobList, jobCnt: jobs.length };
+    return { jobs: jobList, jobCnt: jobCnt };
   }
 
   async queryJobById(id: number): Promise<JobDetailResponse> {
