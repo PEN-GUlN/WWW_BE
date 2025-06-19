@@ -22,14 +22,14 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 1000 * 60 * 60,
-        sameSite: 'none',
-        secure: false, //process.env.NODE_ENV === "production",
+        sameSite: 'lax',
+        secure: false,
       },
     }),
   );
 
   app.enableCors({
-    origin: 'http://localhost:3307',
+    origin: 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
