@@ -32,6 +32,7 @@ export class QueryPostService {
       relations: ['user'],
       order: { id: 'DESC' },
     });
+
     const postListResponse = new PostListResponse();
 
     postListResponse.posts = posts.map((post) => this.mapToJobResponse(post));
