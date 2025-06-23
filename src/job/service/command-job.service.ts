@@ -5,59 +5,61 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { XMLParser } from 'fast-xml-parser';
 import axios from 'axios';
-import { Category, categoryMap } from 'src/comm/enum/category';
 
 @Injectable()
 export class CommandJobService {
   constructor(@InjectRepository(Job) private readonly jobRepository: Repository<Job>) {}
 
-  async saveData(category: string) {
-    const dsptcKsco = category;
-    const url = `http://www.worldjob.or.kr/openapi/openapi.do?dobType=1&dsptcKsco=${dsptcKsco}&continent=2&epmt61=N&pageIndex=1&showItemListCount=100`;
+  async saveData(): Promise<void> {
+    const url = `https://jobdataapi.com/api/jobs/?page=1&title=python`;
+    const response = await axios.get(url);
 
-    const response = await axios.get(url, {
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: process.env.NODE_ENV !== 'development',
-      }),
-    });
+    // const response = await axios.get(url);
+    const data = response.data;
+    const jobs: Job[] = [];
 
-    const parser = new XMLParser({
-      ignoreAttributes: false,
-      trimValues: true,
-      parseTagValue: true,
-    });
-
-    const json = parser.parse(response.data);
-
-    const items = json.WORLDJOB.ITEM;
-    const itemList = Array.isArray(items) ? items : [items];
-
-    const jobs: Job[] = itemList.map((item: any) => {
+    for (const item of data.results) {
       const job = new Job();
+      job.id = Number(item.ext_id);
+      job.title = item.title;
+      job.description = this.removeHtmlEntities(item.description);
+      job.companyName = item.company?.name;
+      job.companyLogo = item.company?.logo;
+      job.companyWebsite = item.company?.website_url;
+      job.companyLinkedin = item.company?.linkedin_url;
+      job.companyTwitter = item.company?.twitter_handle;
+      job.companyGithub = item.company?.github_url;
+      job.isAgency = item.company?.is_agency ?? false;
+      job.employmentType = item.types[0]?.name;
+      job.location = item.location;
+      job.hasRemote = item.has_remote ?? false;
 
-      job.title = item.rctntcSj;
-      job.description = this.removeHtmlEntities(item.rctntcSprtQualfCn);
-      job.company = item.entNm;
-      job.category = categoryMap[dsptcKsco] || Category.ETC;
-      job.careerLevel = item.joDemandCareerStleScd;
-      job.educationLevel = item.joDemandAcdmcrScd;
-      job.employmentType = item.joEmplymStleScd;
-      job.workHours = item.wrkHopeHrCn;
-      job.salary = item.anslryDscssAt;
-      job.location = this.removeHtmlEntities(item.joLplcEntAdres);
-      job.deadline = item.rctntcEndDe;
-      job.postedDate = item.rctntcBgnDe;
-      job.linkUrl = item.linkUrl;
-      job.applyUrl = item.directApply;
-      job.nationImgUrl = item.nationImgUrl;
-
-      return job;
-    });
+      job.cityName = item.cities[0]?.name;
+      job.stateName = item.states[0]?.name;
+      job.countryName = item.countries[0]?.name;
+      job.countryCode = item.countries[0]?.code;
+      job.regionName = item.regions[0]?.name;
+      job.publishedDate = this.publishedDateToDate(item.published);
+      job.applicationUrl = item.application_url;
+      job.experienceLevel = item.experience_level;
+      job.language = item.language;
+      job.salaryMin = item.salary_min;
+      job.salaryMax = item.salary_max;
+      job.salaryCurrency = item.salary_currency;
+    }
 
     await this.jobRepository.save(jobs);
   }
 
   private removeHtmlEntities(input: string): string {
     return input.replace(/&[^\s;]+;/g, '');
+  }
+
+  private publishedDateToDate(published: string): Date {
+    const date = new Date(published);
+    if (isNaN(date.getTime())) {
+      throw new Error(`Invalid date format: ${published}`);
+    }
+    return date;
   }
 }

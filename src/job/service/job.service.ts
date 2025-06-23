@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandJobService } from './command-job.service';
-import { Category } from 'src/comm/enum/category';
+import { CountryCode } from 'src/comm/enum/countryCode';
 import { QueryJobService } from './query-job.service';
 import { Job } from '../entity/job.entity';
 
@@ -11,16 +11,16 @@ export class JobService {
     private readonly queryJobService: QueryJobService,
   ) {}
 
-  async saveData(category: string) {
-    return this.commandJobService.saveData(category);
+  async saveData() {
+    return this.commandJobService.saveData();
   }
 
   async getAllJobs() {
     return await this.queryJobService.queryAllJobList();
   }
 
-  async getJobsByCategory(category: Category) {
-    return await this.queryJobService.queryJobListByCategory(category);
+  async getJobsByCountryCode(countryCode: CountryCode) {
+    return await this.queryJobService.queryJobListByCountryCode(countryCode);
   }
 
   async getJobById(id: number) {

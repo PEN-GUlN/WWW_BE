@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from '../entity/job.entity';
 import { Repository } from 'typeorm';
-import { Category, categoryNameInKorean } from 'src/comm/enum/category';
+import { CountryCode } from 'src/comm/enum/countryCode';
 import { AllJobsResponse, JobResponse } from '../dto/response/get-jobs.response';
 import { JobDetailResponse } from '../dto/response/get-job-detail.response';
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -22,14 +22,13 @@ export class QueryJobService {
     return { jobs: jobList, jobCnt: jobCnt };
   }
 
-  async queryJobListByCategory(category: Category): Promise<AllJobsResponse> {
+  async queryJobListByCountryCode(countryCode: CountryCode): Promise<AllJobsResponse> {
     const jobs = await this.jobRepository.find({
-      where: { category },
+      where: { countryCode },
       order: {
         id: 'DESC',
       },
     });
-
     const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
     const jobCnt = jobs.length;
 
@@ -43,48 +42,46 @@ export class QueryJobService {
       id: job.id,
       title: job.title,
       description: job.description,
-      company: job.company,
-      category: categoryNameInKorean[job.category],
-      careerLevel: job.careerLevel,
-      educationLevel: job.educationLevel,
+      company: job.companyName,
+      companyLogo: job.companyLogo,
+      companyWebsite: job.companyWebsite,
+      companyLinkedin: job.companyLinkedin,
+      companyTwitter: job.companyTwitter,
+      companyGithub: job.companyGithub,
+      isAgency: job.isAgency,
       employmentType: job.employmentType,
-      workHours: job.workHours,
-      salary: job.salary,
       location: job.location,
-      deadline: this.getDeadlineStatus(job.deadline),
-      postedDate: job.postedDate.toISOString(),
-      linkUrl: job.linkUrl,
-      applyUrl: job.applyUrl,
-      nationImgUrl: job.nationImgUrl,
+      hasRemote: job.hasRemote,
+      countryCode: job.countryCode,
+      countryName: job.countryName,
+      stateName: job.stateName,
+      cityName: job.cityName,
+      regionName: job.regionName,
+      publishedDate: job.publishedDate.toISOString().split('T')[0], // Convert to just date string
+      applicationUrl: job.applicationUrl,
+      experienceLevel: job.experienceLevel,
+      language: job.language,
     };
   }
 
-  private getDeadlineStatus(deadline: Date): string {
+  private getDaysSincePublished(publishedDate: Date): number {
     const today = new Date();
-
-    const diffTime = deadline.getTime() - today.getTime();
+    const diffTime = today.getTime() - publishedDate.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-    if (diffDays < 0) {
-      return '마감';
-    }
-
-    return `D-${diffDays}`;
+    return diffDays;
   }
 
-  mapToJobResponse(job: Job): JobResponse {
+  public mapToJobResponse(job: Job): JobResponse {
     return {
       id: job.id,
-      company: job.company,
       title: job.title,
-      description: job.description,
-      workHours: job.workHours,
-      careerLevel: job.careerLevel,
+      company: job.companyName,
+      companyLogo: job.companyLogo,
+      isAgency: job.isAgency,
       employmentType: job.employmentType,
-      salary: job.salary,
-      deadline: this.getDeadlineStatus(job.deadline),
       location: job.location,
-      nationImgUrl: job.nationImgUrl,
+      publishedDate: this.getDaysSincePublished(job.publishedDate),
+      experienceLevel: job.experienceLevel,
     };
   }
 

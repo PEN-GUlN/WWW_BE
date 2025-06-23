@@ -1,15 +1,15 @@
 import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { JobService } from './service/job.service';
-import { Category } from 'src/comm/enum/category';
+import { CountryCode } from 'src/comm/enum/countryCode';
 
 @Controller('job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
 
   @HttpCode(201)
-  @Post('/save/:category')
-  async saveData(@Param('category') category: string) {
-    return await this.jobService.saveData(category);
+  @Post('/save')
+  async saveData() {
+    return await this.jobService.saveData();
   }
 
   @Get('/query/all')
@@ -17,9 +17,9 @@ export class JobController {
     return await this.jobService.getAllJobs();
   }
 
-  @Get('/query/:category')
-  async getJobsByCategory(@Param('category') category: Category) {
-    return await this.jobService.getJobsByCategory(category);
+  @Get('/query/:countryCode')
+  async getJobsByCountryCode(@Param('countryCode') countryCode: CountryCode) {
+    return await this.jobService.getJobsByCountryCode(countryCode);
   }
 
   @Get('/query/detail/:id')
