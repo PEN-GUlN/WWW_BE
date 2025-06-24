@@ -13,7 +13,7 @@ export class QueryJobService {
   async queryAllJobList(): Promise<AllJobsResponse> {
     const jobs = await this.jobRepository.find({
       order: {
-        id: 'DESC',
+        publishedDate: 'DESC',
       },
     });
     const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
@@ -57,7 +57,7 @@ export class QueryJobService {
       stateName: job.stateName,
       cityName: job.cityName,
       regionName: job.regionName,
-      publishedDate: job.publishedDate.toISOString().split('T')[0], // Convert to just date string
+      publishedDate: job.publishedDate.toISOString().split('T')[0],
       applicationUrl: job.applicationUrl,
       experienceLevel: job.experienceLevel,
       language: job.language,

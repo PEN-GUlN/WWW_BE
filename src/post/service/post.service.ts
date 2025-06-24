@@ -1,18 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { SavePostService } from './save-post.service';
+
 import { PostRequest } from '../dto/request/post.request';
 import { QueryPostService } from './query-post.service';
 import { Type } from 'src/comm/enum/type';
+import { CommandPostService } from './command-post.service';
 
 @Injectable()
 export class PostService {
   constructor(
-    private readonly savePostService: SavePostService,
+    private readonly commandPostService: CommandPostService,
     private readonly queryPostService: QueryPostService,
   ) {}
 
   async savePost(request: PostRequest, userEmail: string) {
-    return this.savePostService.savePost(request, userEmail);
+    return this.commandPostService.savePost(request, userEmail);
   }
 
   async getAllPosts() {

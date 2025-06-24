@@ -6,7 +6,7 @@ import { PostRequest } from '../dto/request/post.request';
 import { UserService } from 'src/user/service/user.service';
 
 @Injectable()
-export class SavePostService {
+export class CommandPostService {
   constructor(
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     @Inject(forwardRef(() => UserService))
