@@ -6,3 +6,8 @@ export class CommentResponse {
     email: string;
   };
 }
+
+export class CommentListResponse {
+  comments: CommentResponse[];
+  commentCnt: number;
+}

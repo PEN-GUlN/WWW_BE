@@ -1,5 +1,5 @@
 import { Type } from 'src/comm/enum/type';
-import { CommentResponse } from 'src/comment/dto/response/comment.response';
+import { CommentResponse } from 'src/comment/dto/response/comment-list.response';
 
 export class PostDetailResponse {
   id: number;
@@ -12,5 +12,4 @@ export class PostDetailResponse {
     email: string;
   };
   comments: CommentResponse[];
-  commentCnt: number;
 }

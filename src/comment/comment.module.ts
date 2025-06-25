@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, Query } from '@nestjs/common';
 import { Comment } from './entity/comment.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommentController } from './comment.controller';

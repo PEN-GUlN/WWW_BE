@@ -16,7 +16,7 @@ export class QueryPostService {
   async queryAllPosts(): Promise<PostListResponse> {
     const posts = await this.postRepository.find({
       relations: ['user'],
-      order: { id: 'DESC' },
+      order: { created_at: 'DESC' },
     });
     const postListResponse = new PostListResponse();
 
@@ -30,7 +30,7 @@ export class QueryPostService {
     const posts = await this.postRepository.find({
       where: { type },
       relations: ['user'],
-      order: { id: 'DESC' },
+      order: { created_at: 'DESC' },
     });
 
     const postListResponse = new PostListResponse();
@@ -44,28 +44,24 @@ export class QueryPostService {
   async queryPostById(id: number): Promise<PostDetailResponse> {
     const post = await this.queryPostByIdOrThrow(id);
 
-    const comments = post.comments;
-
-    const postDetailResponse: PostDetailResponse = {
-      id: post.id,
-      title: post.title,
-      content: post.content,
-      type: post.type,
-      created_at: post.created_at,
-      tags: post.tags.split(', ').map((tag) => tag.trim()),
-      user: {
-        email: post.user.email,
-      },
-      comments: comments.map((comment) => ({
-        id: comment.id,
-        content: comment.content,
-        created_at: comment.created_at,
-        user: {
-          email: comment.user.email,
-        },
-      })),
-      commentCnt: comments.length,
+    const postDetailResponse = new PostDetailResponse();
+    postDetailResponse.id = post.id;
+    postDetailResponse.title = post.title;
+    postDetailResponse.content = post.content;
+    postDetailResponse.type = post.type;
+    postDetailResponse.created_at = post.created_at;
+    postDetailResponse.tags = post.tags.split(', ').map((tag) => tag.trim());
+    postDetailResponse.user = {
+      email: post.user.email,
     };
+    postDetailResponse.comments = post.comments.map((comment) => ({
+      id: comment.id,
+      content: comment.content,
+      created_at: comment.created_at,
+      user: {
+        email: comment.user.email,
+      },
+    }));
 
     return postDetailResponse;
   }
@@ -74,7 +70,7 @@ export class QueryPostService {
     return this.postRepository.find({
       where: { user: { email: userEmail } },
       relations: ['user'],
-      order: { id: 'DESC' },
+      order: { created_at: 'DESC' },
     });
   }
 
