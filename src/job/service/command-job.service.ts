@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import * as https from 'https';
 import { Job } from '../entity/job.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { XMLParser } from 'fast-xml-parser';
 import axios from 'axios';
 
 @Injectable()
