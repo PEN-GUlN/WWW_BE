@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Inject, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Bookmark } from '../entity/bookmark.entity';
 import { Repository } from 'typeorm';
@@ -11,6 +11,7 @@ export class CommandBookmarkService {
   constructor(
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly jobService: JobService,
     private readonly queryBookmarkService: QueryBookmarkService,

@@ -2,42 +2,57 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Job } from '../entity/job.entity';
 import { Repository } from 'typeorm';
 import { CountryCode } from 'src/comm/enum/countryCode';
-import { AllJobsResponse, JobResponse } from '../dto/response/get-jobs.response';
+import { JobListResponse, JobResponse } from '../dto/response/get-jobs.response';
 import { JobDetailResponse } from '../dto/response/get-job-detail.response';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Inject, forwardRef } from '@nestjs/common';
+import { BookmarkService } from 'src/bookmark/service/bookmark-service';
 
 @Injectable()
 export class QueryJobService {
-  constructor(@InjectRepository(Job) private readonly jobRepository: Repository<Job>) {}
+  constructor(
+    @InjectRepository(Job) private readonly jobRepository: Repository<Job>,
+    @Inject(forwardRef(() => BookmarkService))
+    private readonly bookmarkService: BookmarkService,
+  ) {}
 
-  async queryAllJobList(): Promise<AllJobsResponse> {
+  async queryAllJobList(userEmail: string): Promise<JobListResponse> {
     const jobs = await this.jobRepository.find({
-      order: {
-        publishedDate: 'DESC',
-      },
+      order: { publishedDate: 'DESC' },
     });
-    const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
+    const jobList: JobResponse[] = await Promise.all(
+      jobs.map(async (job) => {
+        const isBookmarked = await this.bookmarkService.isBookmarked(userEmail, job.id);
+        return this.mapToJobResponse(job, isBookmarked);
+      }),
+    );
     const jobCnt = jobs.length;
-
-    return { jobs: jobList, jobCnt: jobCnt };
+    return { jobs: jobList, jobCnt };
   }
 
-  async queryJobListByCountryCode(countryCode: CountryCode): Promise<AllJobsResponse> {
+  async queryJobListByCountryCode(
+    userEmail: string,
+    countryCode: CountryCode,
+  ): Promise<JobListResponse> {
     const jobs = await this.jobRepository.find({
       where: { countryCode },
-      order: {
-        id: 'DESC',
-      },
+      order: { id: 'DESC' },
     });
-    const jobList: JobResponse[] = jobs.map((job) => this.mapToJobResponse(job));
+    const jobList: JobResponse[] = await Promise.all(
+      jobs.map(async (job) => {
+        const isBookmarked = await this.bookmarkService.isBookmarked(userEmail, job.id);
+        return this.mapToJobResponse(job, isBookmarked);
+      }),
+    );
     const jobCnt = jobs.length;
-
-    return { jobs: jobList, jobCnt: jobCnt };
+    return { jobs: jobList, jobCnt };
   }
 
-  async queryJobById(id: number): Promise<JobDetailResponse> {
+  async queryJobById(
+    userEmail: string,
+    id: number,
+  ): Promise<JobDetailResponse & { isBookmarked: boolean }> {
     const job = await this.queryJobByIdOrThrow(id);
-
+    const isBookmarked = await this.bookmarkService.isBookmarked(userEmail, job.id);
     return {
       id: job.id,
       title: job.title,
@@ -61,6 +76,7 @@ export class QueryJobService {
       applicationUrl: job.applicationUrl,
       experienceLevel: job.experienceLevel,
       language: job.language,
+      isBookmarked,
     };
   }
 
@@ -71,7 +87,7 @@ export class QueryJobService {
     return diffDays;
   }
 
-  public mapToJobResponse(job: Job): JobResponse {
+  public mapToJobResponse(job: Job, isBookmarked: boolean): JobResponse {
     return {
       id: job.id,
       title: job.title,
@@ -82,6 +98,7 @@ export class QueryJobService {
       location: job.location,
       publishedDate: this.getDaysSincePublished(job.publishedDate),
       experienceLevel: job.experienceLevel,
+      isBookmarked,
     };
   }
 

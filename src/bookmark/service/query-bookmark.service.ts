@@ -2,7 +2,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entity/user.entity';
 import { Repository } from 'typeorm';
 import { Bookmark } from '../entity/bookmark.entity';
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { BookmarkListResponse, BookmarkResponse } from '../dto/response/bookmark-list.response';
 import { UserService } from 'src/user/service/user.service';
 import { JobService } from 'src/job/service/job.service';
@@ -12,6 +18,7 @@ export class QueryBookmarkService {
   constructor(
     @InjectRepository(Bookmark)
     private readonly bookmarkRepository: Repository<Bookmark>,
+    @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
     private readonly jobService: JobService,
   ) {}
@@ -21,7 +28,7 @@ export class QueryBookmarkService {
 
     const bookmarks = await this.bookmarkRepository.find({
       where: { user },
-      relations: ['job'],
+      relations: ['job', 'user'],
     });
 
     const bookmarkListResponse = new BookmarkListResponse();
@@ -58,5 +65,12 @@ export class QueryBookmarkService {
     if (exists) {
       throw new ConflictException('Already bookmarked');
     }
+  }
+
+  async queryBookmarkByUserAndJob(userEmail: string, jobId: number): Promise<Bookmark | null> {
+    return await this.bookmarkRepository.findOne({
+      where: { user: { email: userEmail }, job: { id: jobId } },
+      relations: ['user', 'job'],
+    });
   }
 }

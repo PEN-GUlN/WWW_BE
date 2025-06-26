@@ -6,6 +6,7 @@ import { User } from '../entity/user.entity';
 import { PostListResponse, PostResponse } from 'src/post/dto/response/post-list.response';
 import { MyPageResponse } from '../dto/my-page-response';
 import { PostService } from 'src/post/service/post.service';
+import { BookmarkService } from 'src/bookmark/service/bookmark-service';
 
 @Injectable()
 export class QueryUserService {
@@ -14,6 +15,8 @@ export class QueryUserService {
     private readonly userRepository: Repository<User>,
     @Inject(forwardRef(() => PostService))
     private readonly postService: PostService,
+    @Inject(forwardRef(() => BookmarkService))
+    private readonly bookmarkService: BookmarkService,
   ) {}
 
   async queryMyPage(userEmail: string): Promise<MyPageResponse> {
@@ -21,11 +24,24 @@ export class QueryUserService {
 
     const postsData = await this.queryPostsByUser(user.email);
 
-    const myPageResponse = new MyPageResponse();
+    const bookmarkedJobsResponse = await this.bookmarkService.findBookmarksByUser(user.email);
+    const bookmarkData = bookmarkedJobsResponse.bookmarks.map((bookmark) => ({
+      id: bookmark.id,
+      jobInfo: bookmark.jobInfo,
+    }));
 
-    myPageResponse.email = user.email;
-    myPageResponse.interest = user.interest;
-    myPageResponse.posts = postsData;
+    const myPageResponse: MyPageResponse = {
+      email: user.email,
+      interest: user.interest,
+      posts: {
+        posts: postsData.posts,
+        postCnt: postsData.postCnt,
+      },
+      bookmarkedPosts: {
+        bookmarkCnt: bookmarkData.length,
+        bookmarks: bookmarkData,
+      },
+    };
 
     return myPageResponse;
   }
@@ -54,6 +70,7 @@ export class QueryUserService {
       user: {
         email: post.user.email,
       },
+      commentCnt: post.comments.length,
     }));
 
     return {
