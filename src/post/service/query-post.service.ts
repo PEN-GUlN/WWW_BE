@@ -15,7 +15,7 @@ export class QueryPostService {
 
   async queryAllPosts(): Promise<PostListResponse> {
     const posts = await this.postRepository.find({
-      relations: ['user'],
+      relations: ['user', 'comments'],
       order: { created_at: 'DESC' },
     });
     const postListResponse = new PostListResponse();
@@ -29,7 +29,7 @@ export class QueryPostService {
   async queryPostsByType(type: Type): Promise<PostListResponse> {
     const posts = await this.postRepository.find({
       where: { type },
-      relations: ['user'],
+      relations: ['user', 'comments'],
       order: { created_at: 'DESC' },
     });
 
@@ -69,7 +69,7 @@ export class QueryPostService {
   async queryPostsByUserEmail(userEmail: string) {
     return this.postRepository.find({
       where: { user: { email: userEmail } },
-      relations: ['user'],
+      relations: ['user', 'comments'],
       order: { created_at: 'DESC' },
     });
   }
@@ -85,6 +85,7 @@ export class QueryPostService {
       user: {
         email: post.user.email,
       },
+      commentCnt: post.comments.length,
     };
   }
 
