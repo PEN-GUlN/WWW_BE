@@ -28,4 +28,9 @@ export class BookmarkService {
   async validateExistBookmark(userMail: string, jobId: number) {
     return await this.queryBookmarkService.validateExistBookmark(userMail, jobId);
   }
+
+  async isBookmarked(userEmail: string, jobId: number): Promise<boolean> {
+    const bookmark = await this.queryBookmarkService.queryBookmarkByUserAndJob(userEmail, jobId);
+    return !!bookmark;
+  }
 }

@@ -15,20 +15,20 @@ export class JobService {
     return this.commandJobService.saveData();
   }
 
-  async getAllJobs() {
-    return await this.queryJobService.queryAllJobList();
+  async getAllJobs(userEmail: string) {
+    return await this.queryJobService.queryAllJobList(userEmail);
   }
 
-  async getJobsByCountryCode(countryCode: CountryCode) {
-    return await this.queryJobService.queryJobListByCountryCode(countryCode);
+  async getJobsByCountryCode(userEmail: string, countryCode: CountryCode) {
+    return await this.queryJobService.queryJobListByCountryCode(userEmail, countryCode);
   }
 
-  async getJobById(id: number) {
-    return await this.queryJobService.queryJobById(id);
+  async getJobById(userEmail: string, id: number) {
+    return await this.queryJobService.queryJobById(userEmail, id);
   }
 
-  mapToJobResponse(job: Job) {
-    return this.queryJobService.mapToJobResponse(job);
+  mapToJobResponse(job: Job, isBookmarked: boolean) {
+    return this.queryJobService.mapToJobResponse(job, isBookmarked);
   }
 
   async findJobByIdOrThrow(jobId: number) {

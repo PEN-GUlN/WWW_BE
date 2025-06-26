@@ -1,4 +1,4 @@
-export class AllJobsResponse {
+export class JobListResponse {
   jobs: JobResponse[];
   jobCnt: number;
 }
@@ -13,4 +13,5 @@ export class JobResponse {
   'location': string;
   'publishedDate': number;
   'experienceLevel': string;
+  'isBookmarked': boolean;
 }
