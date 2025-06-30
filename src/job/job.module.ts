@@ -7,12 +7,12 @@ import { Job } from './entity/job.entity';
 import { QueryJobService } from './service/query-job.service';
 import { CommandJobService } from './service/command-job.service';
 import { BookmarkModule } from 'src/bookmark/bookmark.module';
-import { BookmarkService } from 'src/bookmark/service/bookmark-service';
+// import { BookmarkService } from 'src/bookmark/service/bookmark-service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Job]), HttpModule, forwardRef(() => BookmarkModule)],
   controllers: [JobController],
-  providers: [JobService, QueryJobService, CommandJobService, BookmarkService],
+  providers: [JobService, QueryJobService, CommandJobService],
   exports: [JobService],
 })
 export class JobModule {}

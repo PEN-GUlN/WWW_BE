@@ -19,14 +19,15 @@ export class QueryJobService {
     const jobs = await this.jobRepository.find({
       order: { publishedDate: 'DESC' },
     });
-    const jobList: JobResponse[] = await Promise.all(
-      jobs.map(async (job) => {
-        const isBookmarked = await this.bookmarkService.isBookmarked(userEmail, job.id);
-        return this.mapToJobResponse(job, isBookmarked);
-      }),
+
+    const bookmarkResponse = await this.bookmarkService.findBookmarksByUser(userEmail);
+    const bookmarkJobIds = bookmarkResponse.bookmarks.map((bookmark) => bookmark.jobInfo.id);
+
+    const jobList: JobResponse[] = jobs.map((job) =>
+      this.mapToJobResponse(job, bookmarkJobIds.includes(job.id)),
     );
-    const jobCnt = jobs.length;
-    return { jobs: jobList, jobCnt };
+
+    return { jobs: jobList, jobCnt: jobs.length };
   }
 
   async queryJobListByCountryCode(
