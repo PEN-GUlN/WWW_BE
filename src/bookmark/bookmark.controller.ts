@@ -1,10 +1,9 @@
 import {
+  Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
   Session,
   UseGuards,
@@ -17,28 +16,27 @@ export class BookmarkController {
   constructor(private readonly bookmarkService: BookmarkService) {}
 
   @HttpCode(HttpStatus.CREATED)
-  @Post('/save/:jobId')
+  @Post('/status')
   @UseGuards(SessionAuthGuard)
-  async saveBookmark(@Param('jobId') jobId: number, @Session() session: Record<string, any>) {
-    const userEmail = session.user.email;
-    await this.bookmarkService.saveBookmark(jobId, userEmail);
-  }
-
-  @HttpCode(HttpStatus.NO_CONTENT)
-  @Delete('/delete/:bookmarkId')
-  @UseGuards(SessionAuthGuard)
-  async deleteBookmark(
-    @Param('bookmarkId') bookmarkId: number,
+  async setBookmark(
+    @Body() body: { jobId: number; status: boolean },
     @Session() session: Record<string, any>,
   ) {
-    const userEmail = session.user.email;
-    return await this.bookmarkService.deleteBookmark(bookmarkId, userEmail);
+    const userEmail = session.user.id;
+
+    if (body.status === true) {
+      await this.bookmarkService.saveBookmark(body.jobId, userEmail);
+      return { message: 'Bookmarked' };
+    } else {
+      await this.bookmarkService.deleteBookmark(body.jobId, userEmail);
+      return { message: 'Bookmark removed' };
+    }
   }
 
   @Get('/my')
   @UseGuards(SessionAuthGuard)
   async getMyBookmarks(@Session() session: Record<string, any>) {
-    const userEmail = session.user.email;
+    const userEmail = session.user.id;
 
     return await this.bookmarkService.findBookmarksByUser(userEmail);
   }

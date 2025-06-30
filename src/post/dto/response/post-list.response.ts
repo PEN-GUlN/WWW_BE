@@ -13,4 +13,5 @@ export class PostResponse {
   user: {
     email: string;
   };
+  commentCnt: number;
 }

@@ -21,11 +21,16 @@ export class BookmarkService {
     return await this.queryBookmarkService.queryBookmarksByUser(userMail);
   }
 
-  async findBookmarkByIdOrThrow(bookmarkId: number) {
-    return await this.queryBookmarkService.queryBookmarkByIdOrThrow(bookmarkId);
+  async findBookmarkByJobIdOrThrow(jobId: number) {
+    return await this.queryBookmarkService.queryBookmarkByJobIdOrThrow(jobId);
   }
 
   async validateExistBookmark(userMail: string, jobId: number) {
     return await this.queryBookmarkService.validateExistBookmark(userMail, jobId);
+  }
+
+  async isBookmarked(userEmail: string, jobId: number): Promise<boolean> {
+    const bookmark = await this.queryBookmarkService.queryBookmarkByUserAndJob(userEmail, jobId);
+    return !!bookmark;
   }
 }

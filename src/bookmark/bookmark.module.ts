@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookmarkController } from './bookmark.controller';
 import { BookmarkService } from './service/bookmark-service';
@@ -7,10 +7,16 @@ import { UserModule } from 'src/user/user.module';
 import { JobModule } from 'src/job/job.module';
 import { QueryBookmarkService } from './service/query-bookmark.service';
 import { CommandBookmarkService } from './service/command-bookmark.service';
+import { Job } from 'src/job/entity/job.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Bookmark]), UserModule, JobModule],
+  imports: [
+    TypeOrmModule.forFeature([Bookmark, Job]),
+    forwardRef(() => UserModule),
+    forwardRef(() => JobModule),
+  ],
   controllers: [BookmarkController],
   providers: [BookmarkService, CommandBookmarkService, QueryBookmarkService],
+  exports: [BookmarkService],
 })
 export class BookmarkModule {}

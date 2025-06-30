@@ -1,9 +1,8 @@
-import { Category } from 'src/comm/enum/category';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('job')
 export class Job {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryColumn({ type: 'bigint' })
   id: number;
 
   @Column()
@@ -13,41 +12,73 @@ export class Job {
   description: string;
 
   @Column()
-  company: string;
+  companyName: string;
 
-  @Column({ type: 'enum', enum: Category })
-  category: Category;
+  @Column({ nullable: true })
+  companyLogo: string;
 
-  @Column()
-  careerLevel: string;
+  @Column({ nullable: true })
+  companyWebsite: string;
 
-  @Column()
-  educationLevel: string;
+  @Column({ nullable: true })
+  companyLinkedin: string;
 
-  @Column()
+  @Column({ nullable: true })
+  companyTwitter: string;
+
+  @Column({ nullable: true })
+  companyGithub: string;
+
+  @Column({ default: false })
+  isAgency: boolean;
+
+  // Employment
+  @Column({ nullable: true })
   employmentType: string;
-
-  @Column()
-  workHours: string;
-
-  @Column()
-  salary: string;
 
   @Column()
   location: string;
 
-  @Column()
-  deadline: Date;
+  @Column({ default: false })
+  hasRemote: boolean;
 
-  @Column()
-  postedDate: Date;
+  // Cities, States, Countries, Regions (flattened for now)
+  @Column({ nullable: true })
+  cityName: string;
 
-  @Column()
-  linkUrl: string;
+  @Column({ nullable: true })
+  stateName: string;
 
-  @Column()
-  applyUrl: string;
+  @Column({ nullable: true })
+  countryName: string;
 
-  @Column()
-  nationImgUrl: string;
+  @Column({ nullable: true })
+  countryCode: string;
+
+  @Column({ nullable: true })
+  regionName: string;
+
+  // Dates
+  @Column({ type: 'timestamp', nullable: true })
+  publishedDate: Date;
+
+  // URLs
+  @Column({ nullable: true })
+  applicationUrl: string;
+
+  // Etc
+  @Column({ nullable: true })
+  experienceLevel: string;
+
+  @Column({ nullable: true })
+  language: string;
+
+  @Column({ type: 'decimal', nullable: true })
+  salaryMin: number;
+
+  @Column({ type: 'decimal', nullable: true })
+  salaryMax: number;
+
+  @Column({ nullable: true })
+  salaryCurrency: string;
 }

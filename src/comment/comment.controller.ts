@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   HttpCode,
   HttpStatus,
   Param,
@@ -21,7 +22,7 @@ export class CommentController {
   @Post('/save')
   @UseGuards(SessionAuthGuard)
   async saveComment(@Body() request: CommentRequest, @Session() session: Record<string, any>) {
-    const userEmail = session.user.email;
+    const userEmail = session.user.id;
 
     await this.commentService.saveComment(request, userEmail);
   }
@@ -30,7 +31,7 @@ export class CommentController {
   @Delete('/delete/:id')
   @UseGuards(SessionAuthGuard)
   async deleteComment(@Param('id') id: number, @Session() session: Record<string, any>) {
-    const userEmail = session.user.email;
+    const userEmail = session.user.id;
 
     await this.commentService.deleteComment(id, userEmail);
   }
