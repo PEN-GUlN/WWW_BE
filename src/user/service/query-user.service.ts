@@ -7,6 +7,7 @@ import { PostListResponse, PostResponse } from 'src/post/dto/response/post-list.
 import { MyPageResponse } from '../dto/my-page-response';
 import { PostService } from 'src/post/service/post.service';
 import { BookmarkService } from 'src/bookmark/service/bookmark-service';
+import { categoryNameInKorean } from 'src/comm/enum/category';
 
 @Injectable()
 export class QueryUserService {
@@ -32,7 +33,7 @@ export class QueryUserService {
 
     const myPageResponse: MyPageResponse = {
       email: user.email,
-      interest: user.interest,
+      interest: categoryNameInKorean[user.interest],
       posts: {
         posts: postsData.posts,
         postCnt: postsData.postCnt,
@@ -42,6 +43,7 @@ export class QueryUserService {
         bookmarks: bookmarkData,
       },
     };
+    console.log('myPageResponse: ', myPageResponse);
 
     return myPageResponse;
   }
