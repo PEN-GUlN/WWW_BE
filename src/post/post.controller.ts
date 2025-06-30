@@ -22,7 +22,7 @@ export class PostController {
   @Post('/save')
   @UseGuards(SessionAuthGuard)
   async savePost(@Body() request: PostRequest, @Session() session: Record<string, any>) {
-    const userEmail = session.user.email;
+    const userEmail = session.user.id;
 
     await this.postService.savePost(request, userEmail);
   }
