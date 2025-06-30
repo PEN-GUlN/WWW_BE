@@ -23,7 +23,6 @@ export class BookmarkController {
     @Session() session: Record<string, any>
   ) {
     const userEmail = session.user.id;
-    console.log("😂we have to bookmark like: " + body.status);
 
     if (body.status === true) {
       await this.bookmarkService.saveBookmark(body.jobId, userEmail);

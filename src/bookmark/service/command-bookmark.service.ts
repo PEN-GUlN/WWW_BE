@@ -1,15 +1,10 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  Inject,
-  forwardRef,
-} from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Bookmark } from "../entity/bookmark.entity";
-import { Repository } from "typeorm";
-import { UserService } from "src/user/service/user.service";
-import { JobService } from "src/job/service/job.service";
-import { QueryBookmarkService } from "./query-bookmark.service";
+import { Injectable, UnauthorizedException, Inject, forwardRef } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Bookmark } from '../entity/bookmark.entity';
+import { Repository } from 'typeorm';
+import { UserService } from 'src/user/service/user.service';
+import { JobService } from 'src/job/service/job.service';
+import { QueryBookmarkService } from './query-bookmark.service';
 
 @Injectable()
 export class CommandBookmarkService {
@@ -20,7 +15,7 @@ export class CommandBookmarkService {
     private readonly userService: UserService,
     @Inject(forwardRef(() => JobService))
     private readonly jobService: JobService,
-    private readonly queryBookmarkService: QueryBookmarkService
+    private readonly queryBookmarkService: QueryBookmarkService,
   ) {}
 
   async saveBookmark(jobId: number, userEmail: string) {
@@ -36,13 +31,12 @@ export class CommandBookmarkService {
     await this.bookmarkRepository.save(bookmark);
   }
 
-  async deleteBookmark(bookmarkId: number, userEmail: string) {
+  async deleteBookmark(jobId: number, userEmail: string) {
     const user = await this.userService.findUserByEmailOrThrow(userEmail);
-    const bookmark =
-      await this.queryBookmarkService.queryBookmarkByIdOrThrow(bookmarkId);
+    const bookmark = await this.queryBookmarkService.queryBookmarkByJobIdOrThrow(jobId);
 
     if (user.email != bookmark.user.email) {
-      throw new UnauthorizedException("Not your bookmark");
+      throw new UnauthorizedException('Not your bookmark');
     }
 
     //해당 객체를 먼저 조회한 뒤 삭제(연관관계 또한 처리 가능)

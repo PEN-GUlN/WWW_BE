@@ -1,20 +1,17 @@
-import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "src/user/entity/user.entity";
-import { Repository } from "typeorm";
-import { Bookmark } from "../entity/bookmark.entity";
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/entity/user.entity';
+import { Repository } from 'typeorm';
+import { Bookmark } from '../entity/bookmark.entity';
 import {
   ConflictException,
   forwardRef,
   Inject,
   Injectable,
   NotFoundException,
-} from "@nestjs/common";
-import {
-  BookmarkListResponse,
-  BookmarkResponse,
-} from "../dto/response/bookmark-list.response";
-import { UserService } from "src/user/service/user.service";
-import { Job } from "src/job/entity/job.entity";
+} from '@nestjs/common';
+import { BookmarkListResponse, BookmarkResponse } from '../dto/response/bookmark-list.response';
+import { UserService } from 'src/user/service/user.service';
+import { Job } from 'src/job/entity/job.entity';
 
 @Injectable()
 export class QueryBookmarkService {
@@ -24,21 +21,21 @@ export class QueryBookmarkService {
     @InjectRepository(Job)
     private readonly jobRepository: Repository<Job>,
     @Inject(forwardRef(() => UserService))
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   async queryBookmarksByUser(userEmail: string): Promise<BookmarkListResponse> {
     const user = await this.userService.findUserByEmailOrThrow(userEmail);
 
     const bookmarks = await this.bookmarkRepository.find({
-      where: { user },
-      relations: ["job", "user"],
+      where: { user: { email: userEmail } },
+      relations: ['job', 'user'],
     });
 
     const bookmarkListResponse = new BookmarkListResponse();
     bookmarkListResponse.bookmarkCnt = bookmarks.length;
     bookmarkListResponse.bookmarks = bookmarks.map((bookmark) =>
-      this.mapToBookmarkResponse(bookmark)
+      this.mapToBookmarkResponse(bookmark),
     );
 
     return bookmarkListResponse;
@@ -73,14 +70,14 @@ export class QueryBookmarkService {
     return diffDays;
   }
 
-  async queryBookmarkByIdOrThrow(bookmarkId: number): Promise<Bookmark> {
+  async queryBookmarkByJobIdOrThrow(jobId: number): Promise<Bookmark> {
     const bookmark = await this.bookmarkRepository.findOne({
-      where: { id: bookmarkId },
-      relations: ["user", "job"],
+      where: { job: { id: jobId } },
+      relations: ['user', 'job'],
     });
 
     if (!bookmark) {
-      throw new NotFoundException("Bookmark not found");
+      throw new NotFoundException('Bookmark not found');
     }
 
     return bookmark;
@@ -92,17 +89,14 @@ export class QueryBookmarkService {
     });
 
     if (exists) {
-      throw new ConflictException("Already bookmarked");
+      throw new ConflictException('Already bookmarked');
     }
   }
 
-  async queryBookmarkByUserAndJob(
-    userEmail: string,
-    jobId: number
-  ): Promise<Bookmark | null> {
+  async queryBookmarkByUserAndJob(userEmail: string, jobId: number): Promise<Bookmark | null> {
     return await this.bookmarkRepository.findOne({
       where: { user: { email: userEmail }, job: { id: jobId } },
-      relations: ["user", "job"],
+      relations: ['user', 'job'],
     });
   }
 }
