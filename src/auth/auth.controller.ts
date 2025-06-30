@@ -1,8 +1,18 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Session, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Session,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignupRequest } from './dto/request/signup.request';
 import { LoginRequest } from './dto/request/login.request';
 import { Response } from 'express';
+import { SessionAuthGuard } from './session-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -33,9 +43,10 @@ export class AuthController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('logout')
+  @UseGuards(SessionAuthGuard)
   logout(@Session() session: Record<string, any>, @Res() res: Response) {
     session.destroy(() => {
-      res.clearCookie('SESSION_ID').end();
+      res.clearCookie('connect.sid').end();
     });
   }
 }
