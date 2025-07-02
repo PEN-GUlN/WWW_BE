@@ -31,9 +31,14 @@ export class QueryUserService {
       jobInfo: bookmark.jobInfo,
     }));
 
+    const interests = user.interest.split(',').map((interest) => interest.trim());
+    const interestsInKorean = interests.map(
+      (interest) => categoryNameInKorean[interest as keyof typeof categoryNameInKorean] || '기타',
+    );
+
     const myPageResponse: MyPageResponse = {
       email: user.email,
-      interest: categoryNameInKorean[user.interest],
+      interest: interestsInKorean,
       posts: {
         posts: postsData.posts,
         postCnt: postsData.postCnt,
