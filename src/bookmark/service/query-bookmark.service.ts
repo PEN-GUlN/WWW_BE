@@ -57,6 +57,7 @@ export class QueryBookmarkService {
       isAgency: job.isAgency,
       employmentType: job.employmentType,
       location: job.location,
+      countryCode: job.countryCode,
       publishedDate: this.getDaysSincePublished(job.publishedDate),
       experienceLevel: job.experienceLevel,
       isBookmarked,
