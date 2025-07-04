@@ -6,7 +6,7 @@ export class PostRequest {
   @IsString()
   title: string;
 
-  @Length(1, 3000)
+  @Length(1, 10000)
   @IsString()
   content: string;
 
