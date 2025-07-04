@@ -11,6 +11,7 @@ export class JobResponse {
   'isAgency': boolean;
   'employmentType': string;
   'location': string;
+  'countryCode': string;
   'publishedDate': number;
   'experienceLevel': string;
   'isBookmarked': boolean;
